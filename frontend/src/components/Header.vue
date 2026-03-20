@@ -1,3 +1,13 @@
+<script setup>
+  const nav = [
+    { name: 'Adoptar', path: '/' },
+    { name: 'Iniciar Sesión', path: '/' },
+    { name: 'Colabora', path: '/' },
+    { name: 'Noticias', path: '/' },
+    { name: 'Contacto', path: '/' }
+  ] 
+</script>
+
 <template>
   <div class="container">
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
@@ -10,27 +20,18 @@
       </router-link>
 
       <ul class="nav nav-pills">
-        <li class="nav-item">
-          <router-link class="nav-link" to="/">Adoptar</router-link>
-        </li>
-
-        <li class="nav-item">
-          <router-link class="nav-link" to="/">Iniciar Sesión</router-link>
-        </li>
-        
-        <li class="nav-item">
-          <router-link class="nav-link" to="/">Colabora</router-link>
-        </li>
-
-        <li class="nav-item">
-          <router-link class="nav-link" to="/">Noticias</router-link>
-        </li>
-
-        <li class="nav-item">
-          <router-link class="nav-link" to="/">Contacto</router-link>
+        <li class="nav-item"
+        v-for="pags in nav"
+        :key="pags.name"
+        >
+        <router-link 
+        class="nav-link"
+        :to="pags.path"
+        >
+        {{ pags.name}}
+        </router-link>
         </li>
       </ul>
-
     </header>
   </div>
 </template>
