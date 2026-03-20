@@ -1,8 +1,8 @@
 <script setup>
 </script>
     <template>
-     <div class="col-lg-6 mx-auto">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+     <div class="container-fluid hero" >
+            <h1>
             Porque cuando todo falla
             </h1>
             <h2>Ellos te dan la patita</h2>
@@ -16,3 +16,31 @@
             </div>
           </div>
 </template>
+
+<style scoped>
+.hero {
+  background-image: url('../assets/img/img_index/kitten.png');
+  background-size: cover;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero h1 {
+  color: #fff;
+
+}
+.hero h2 {
+  color: #fff;
+}
+
+.lead {
+  color: #fff;
+}
+
+button {
+  background-color: #7fb680;
+  border: none;
+}
+</style>

@@ -9,9 +9,7 @@
 </script>
 
 <template>
-  <div class="container">
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-      
+    <header class="header d-flex flex-wrap justify-content-center py-3 border-bottom">
       <router-link
         to="/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none"
@@ -33,5 +31,26 @@
         </li>
       </ul>
     </header>
-  </div>
 </template>
+
+<style scoped>
+body {
+  margin: 0;
+  padding: 0;
+}
+.header {
+  background-color: #7fb680;
+  width: 100%;
+  height: 100%;
+}
+
+.nav-link {
+  color: #ffffff;
+  font-weight: 500;
+}
+span {
+  color: #ffffff;
+  font-weight: 700;
+  margin-left: 120px;
+}
+</style>

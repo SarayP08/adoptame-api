@@ -9,10 +9,10 @@ const enlaces = [
 </script>
 
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <footer class="py-3 my-4">
 
-      <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <ul class="nav justify-content-center border-bottom">
         <li
           class="nav-item"
           v-for="link in enlaces"
@@ -34,3 +34,23 @@ const enlaces = [
     </footer>
   </div>
 </template>
+
+<style scoped>
+body {
+  margin: 0;
+  padding: 0;
+}
+
+ footer {
+  background-color: #756969;
+  padding: 0;
+}
+
+footer .nav-link {
+  color: #fff !important;
+}
+
+p {
+  color: #fff !important;
+}
+</style>
