@@ -39,17 +39,17 @@ body {
   padding: 0;
 }
 .header {
-  background-color: #7fb680;
+  background-color: #D6D4A0;
   width: 100%;
   height: 100%;
 }
 
 .nav-link {
-  color: #ffffff;
+  color: #654236;
   font-weight: 500;
 }
 span {
-  color: #ffffff;
+  color: #654236;
   font-weight: 700;
   margin-left: 120px;
 }

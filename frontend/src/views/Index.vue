@@ -14,13 +14,19 @@
                Adoptar
               </button>
             </div>
-          </div>
+      </div>
 
-          <div class="col-lg-6 ms-auto">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3 text-end">
+
+      <div class="container mt-5 second-hero">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <img src="../assets/img/img_index/gato_dormido.png" alt="Gato dormido" class="img-fluid rounded shadow-sm" />
+          </div>
+          <div class="col-lg-6">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
               ¿Quiénes somos?
             </h1>
-            <p class="leadi text-end">
+            <p class="leadi">
               Soy una desarrolladora junior amante de los animales con el propósito 
               de crear una plataforma que facilite la adopción de mascotas en Lalín.
                Mi pasión por los animales y mi deseo de marcar una diferencia positiva 
@@ -36,10 +42,14 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
 
+      <div class="container mt-4 third-hero">
+        <div class="row align-items-center">
           <div class="col-lg-6">
             <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-            Mi misión
+              Mi misión
             </h1>
             <p class="leadi">
               Mi misión es crear un espacio donde las personas puedan encontrar a su compañero ideal, 
@@ -54,6 +64,11 @@
               </button>
             </div>
           </div>
+          <div class="col-lg-6 text-center">
+            <img src="../assets/img/img_index/gato_callejero.png" alt="Gato callejero" class="img-fluid rounded shadow-sm" />
+          </div>
+        </div>
+      </div>
 </template>
 
 <style scoped>
@@ -67,7 +82,7 @@
 }
 
 .hero h1 {
-  color: #fff;
+  color: #ffffff;
 
 }
 .hero h2 {
@@ -78,12 +93,27 @@
   color: #fff;
 }
 .leadi {
-  color: #000;
+  color: #ffffff;
 }
 
 
 button {
-  background-color: #7fb680;
+  background-color: #DB995A;
   border: none;
 }
+.second-hero,
+.third-hero {
+  background-color: #D6D4A0;
+  border-radius: 14px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.second-hero .leadi,
+.third-hero .leadi {
+  color: #654236;
+}
+
+
+
 </style>
