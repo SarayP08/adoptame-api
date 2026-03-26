@@ -1,19 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Index from '../views/Index.vue'
+
 import Gatos from '../views/Gatos.vue'
-import DetalleGatos from '../views/DetalleGatos.vue'
 import Login from '../views/Login.vue'
-import Registro from '../views/Registro.vue'
-import PanelAdmin from '../views/PanelAdmin.vue'
+import Colabora from '../views/Colabora.vue'
+import Noticias from '../views/Noticias.vue'
 import Contacto from '../views/Contacto.vue'
+import Index from '../views/Index.vue'
 
 const routes = [
   { path: '/', component: Index },
   { path: '/gatos', component: Gatos },
-  { path: '/gatos/:id', component: DetalleGatos },
   { path: '/login', component: Login },
-  { path: '/registro', component: Registro },
-  { path: '/admin', component: PanelAdmin },
+  { path: '/colabora', component: Colabora },
+  { path: '/noticias', component: Noticias },
   { path: '/contacto', component: Contacto }
 ]
 
