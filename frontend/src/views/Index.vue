@@ -1,8 +1,33 @@
 <script setup>
+import { ref, onMounted } from 'vue';
+
+const imagenes = [
+  new URL('../assets/img/img_index/kitten.png', import.meta.url).href,
+  new URL('../assets/img/img_index/gato_dormido.png', import.meta.url).href, 
+  new URL('../assets/img/img_index/gato_callejero.png', import.meta.url).href
+];
+
+  const imagenActual = ref(0);
+  onMounted(() => {
+    setInterval(() => {
+      imagenActual.value = (imagenActual.value + 1) % imagenes.length;
+    }, 3000);
+    });
+
+    console.log(imagenes[0]);
 </script>
+
     <template>
     <div class="index-page">
-     <div class="container-fluid hero" >
+
+
+    <div class="container-fluid hero">
+
+
+     <div
+      class="hero-bg active" 
+     :style="{ backgroundImage: `url(${imagenes[imagenActual]})` }"></div>
+
       <div class="containerTexto">
             <h1>
             Porque cuando todo falla
@@ -81,18 +106,42 @@
   margin-left: 60px;
 }
 
-
 .index-page {
   background-color: #f19f32;
   min-height: 100vh;
 }
 .hero {
-  background-image: url('../assets/img/img_index/kitten.png');
-  background-size: cover;
   min-height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative; 
+  z-index: 0;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 1s ease-in-out;
+  z-index: 0;
+}
+
+/* capa visible */
+.hero-bg.active {
+  opacity: 1;
+}
+
+/* capa oculta */
+.hero-bg.inactive {
+  opacity: 0;
+}
+
+/* contenido encima */
+.containerTexto {
+  position: relative;
+  z-index: 2;
 }
 
 .hero h1 {
