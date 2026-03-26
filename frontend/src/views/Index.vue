@@ -1,6 +1,7 @@
 <script setup>
 </script>
     <template>
+      <div class="index-page">
      <div class="container-fluid hero" >
             <h1>
             Porque cuando todo falla
@@ -23,7 +24,7 @@
             <img src="../assets/img/img_index/gato_dormido.png" alt="Gato dormido" class="img-fluid rounded shadow-sm" />
           </div>
           <div class="col-lg-6">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            <h1 class="display-5 fw-bold lh-1 mb-3 textoHero">
               ¿Quiénes somos?
             </h1>
             <p class="leadi">
@@ -36,7 +37,7 @@
               y me comprometo a ofrecer un espacio seguro y confiable para que las mascotas
                encuentren su lugar en el mundo.
             </p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="d-flex justify-content-center align-items-center">
               <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">
                 Únete a nosotros
               </button>
@@ -48,7 +49,7 @@
       <div class="container mt-4 third-hero">
         <div class="row align-items-center">
           <div class="col-lg-6">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            <h1 class="display-5 fw-bold lh-1 mb-3 textoHero">
               Mi misión
             </h1>
             <p class="leadi">
@@ -58,7 +59,7 @@
               peludo con aquellos que necesitan un hogar amoroso, 
               fomentando así una comunidad de amantes de los animales comprometidos con el bienestar de nuestras mascotas.
             </p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <div class="d-flex justify-content-center align-items-center">
               <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">
                 Colabora con la causa
               </button>
@@ -69,9 +70,15 @@
           </div>
         </div>
       </div>
+      </div>
 </template>
 
 <style scoped>
+
+.index-page {
+  background-color: #f19f32;
+  min-height: 100vh;
+}
 .hero {
   background-image: url('../assets/img/img_index/kitten.png');
   background-size: cover;
@@ -93,17 +100,19 @@
   color: #fff;
 }
 .leadi {
-  color: #ffffff;
+  color: #654236;
 }
 
-
 button {
-  background-color: #DB995A;
+  background-color: #f09014;
   border: none;
+  display: flex; 
+  color: rgb(255, 255, 255);
+  
 }
 .second-hero,
 .third-hero {
-  background-color: #D6D4A0;
+  background-color: #faf8b3;
   border-radius: 14px;
   padding: 2rem;
   margin-bottom: 1.5rem;
@@ -112,8 +121,13 @@ button {
 .second-hero .leadi,
 .third-hero .leadi {
   color: #654236;
+  text-align: justify;
 }
 
-
+.second-hero .textoHero,
+.third-hero .textoHero {
+  color: #ad6119;
+  text-align: center;
+}
 
 </style>

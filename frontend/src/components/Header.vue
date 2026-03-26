@@ -39,7 +39,7 @@ body {
   padding: 0;
 }
 .header {
-  background-color: #D6D4A0;
+  background-color: #faf8b3;
   width: 100%;
   height: 100%;
 }
