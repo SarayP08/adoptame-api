@@ -1,8 +1,9 @@
 <script setup>
 </script>
     <template>
-      <div class="index-page">
+    <div class="index-page">
      <div class="container-fluid hero" >
+      <div class="containerTexto">
             <h1>
             Porque cuando todo falla
             </h1>
@@ -15,6 +16,7 @@
                Adoptar
               </button>
             </div>
+          </div>
       </div>
 
 
@@ -74,6 +76,11 @@
 </template>
 
 <style scoped>
+
+.containerTexto {
+  margin-left: 60px;
+}
+
 
 .index-page {
   background-color: #f19f32;
