@@ -70,7 +70,7 @@ const posts = [
             <img src="../assets/img/img_index/gato_dormido.png" alt="Gato dormido" class="img-fluid rounded shadow-sm" />
           </div>
           <div class="col-lg-6">
-            <h1 class="display-5 fw-bold lh-1 mb-3 textoHero">
+            <h1 class="display-5  lh-1 mb-3 textoHero">
               ¿Quiénes somos?
             </h1>
             <p class="leadi">
@@ -95,7 +95,7 @@ const posts = [
       <div class="container mt-4 third-hero">
         <div class="row align-items-center">
           <div class="col-lg-6">
-            <h1 class="display-5 fw-bold lh-1 mb-3 textoHero">
+            <h1 class="display-5 lh-1 mb-3 textoHero">
               Mi misión
             </h1>
             <p class="leadi">
@@ -112,7 +112,7 @@ const posts = [
             </div>
           </div>
           <div class="col-lg-6 text-center">
-            <img src="../assets/img/img_index/gato_callejero.png" alt="Gato callejero" class="img-fluid rounded shadow-sm" />
+            <img src="../assets/img/img_index/kitten.png" alt="Gato callejero" class="img-fluid rounded shadow-sm" />
           </div>
         </div>
          </div>
@@ -140,12 +140,16 @@ const posts = [
 
   </div>
 </div>
-      </div>
+</div>
      
 </template>
 
 <style scoped>
 
+
+body {
+  overflow-x: hidden;
+}
 .containerTexto {
   margin-left: 60px;
 }
@@ -161,11 +165,16 @@ const posts = [
   justify-content: center;
   position: relative; 
   z-index: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100vw;
 }
 
 .hero-bg {
   position: absolute;
   inset: 0;
+  background-size: cover;         
+  background-position: center;    
   background-repeat: no-repeat;
   transition: background-image 0.5s ease-in-out;
   z-index: 0;
@@ -199,12 +208,13 @@ const posts = [
 
 .lead {
   color: #fff;
-  font-family: 'coolvetica';
   font-size: 30px;
+  font-family: 'coolvetica';
 }
 
 .leadi {
   color: #654236;
+  font-family: 'coolvetica';
 }
 
 button {
@@ -222,7 +232,7 @@ button:hover {
 
 .second-hero,
 .third-hero {
-  background-color: #faf8b3;
+  background-color: #31312d83;
   border-radius: 14px;
   padding: 2rem;
   margin-bottom: 1.5rem;
@@ -230,14 +240,16 @@ button:hover {
 
 .second-hero .leadi,
 .third-hero .leadi {
-  color: #654236;
+  color: #ffffff;
   text-align: justify;
+  font-size: 20px;
 }
 
 .second-hero .textoHero,
 .third-hero .textoHero {
-  color: #ad6119;
+  color: #ffffff;
   text-align: center;
+  font-family: 'lemonMilk';
 }
 
 .novedades {
@@ -273,6 +285,5 @@ button:hover {
   background-color: #f09014;
   border: none;
 }
-
 
 </style>
