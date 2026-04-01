@@ -174,12 +174,10 @@ const posts = [
   z-index: 0;
 }
 
-/* capa visible */
 .hero-bg.active {
   opacity: 1;
 }
 
-/* capa oculta */
 .hero-bg.inactive {
   opacity: 0;
 }
@@ -233,13 +231,12 @@ button {
 }
 
 .novedades {
-  background-color: #faf8b3;
   border-radius: 14px;
   padding: 2rem;
 }
 
 .titulo-novedades {
-  color: #ad6119;
+  color: #ffffff;
 }
 
 .card {
