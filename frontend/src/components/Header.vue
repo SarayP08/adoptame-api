@@ -4,7 +4,7 @@
     { name: 'Colabora', path: 'colabora' },
     { name: 'Noticias', path: 'noticias' },
     { name: 'Iniciar Sesión', path: 'login' },
-    { name: 'Registrarse', path: 'register' },
+    { name: 'Registrarse', path: 'registro' },
     { name: 'Contacto', path: 'contacto' }
   ] 
 </script>

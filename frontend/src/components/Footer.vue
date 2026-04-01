@@ -41,21 +41,19 @@ const enlaces = [
 }
 
 footer {
-  background-color: #756969;
+  background-color:  #423430;
   padding: 1rem 0;
   width: 100%;
 }
 
-footer ul {
-  margin: 0;
-}
-
-footer p {
-  margin: 0;
-  color:#ffffff;
-}
-
 footer .nav-link {
-  color: #fff !important;
+  color: #ffffff !important;
+  font-family: 'coolvetica';
+  font-size: 20px;
+}
+
+.text-center {
+  color:#ffffff !important;
+  font-family: 'lemonMilk';
 }
 </style>

@@ -56,8 +56,13 @@
 
 <style scoped>
 
+h1 {
+  font-family: 'lemonMilk';
+  color: #654236;
+}
+
 .contenedor {
-  background-image: url(../assets/img/img_index/gato_dormido.png);
+  background-image: url(../assets/img/img_inicioS/gato_fondo.png);
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -68,7 +73,6 @@
   position: relative;
 }
 
-/* overlay oscuro cálido */
 .contenedor::before {
   content: "";
   position: absolute;

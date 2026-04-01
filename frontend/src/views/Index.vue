@@ -155,7 +155,7 @@ body {
 }
 
 .index-page {
-  background-color: #f19f32;
+  background-color: #f0e399;
   min-height: 100vh;
 }
 .hero {
@@ -206,6 +206,23 @@ body {
 
 }
 
+h2 {
+  color:  #654236;
+  font-family: 'lemonMilk';
+  font-size: 60px;
+}
+
+h5 {
+  color: #ad6119;
+  font-family: 'lemonMilk';
+  font-size: 24px;
+}
+
+.card-text {
+  color: #654236;
+  font-family: 'coolvetica';
+}
+
 .lead {
   color: #fff;
   font-size: 30px;
@@ -232,7 +249,7 @@ button:hover {
 
 .second-hero,
 .third-hero {
-  background-color: #31312d83;
+  background-color: #0000005d;
   border-radius: 14px;
   padding: 2rem;
   margin-bottom: 1.5rem;
@@ -258,7 +275,7 @@ button:hover {
 }
 
 .titulo-novedades {
-  color: #ffffff;
+  color:  #654236;
 }
 
 .card {
