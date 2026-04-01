@@ -7,6 +7,27 @@ const imagenes = [
   new URL('../assets/img/img_index/gato_callejero.png', import.meta.url).href
 ];
 
+const posts = [
+  {
+    id: 1,
+    titulo: "La segunda oportunidad de Simón",
+    descripcion: "Simón fue rescatado en condiciones difíciles, pero hoy disfruta de un hogar lleno de cariño.",
+    imagen: new URL('../assets/img/img_index/gato_dormido.png', import.meta.url).href
+  },
+  {
+    id: 2,
+    titulo: "Nueva ley del bienestar animal",
+    descripcion: "Te explicamos los puntos clave de la nueva normativa y cómo afecta a las adopciones.",
+    imagen: new URL('../assets/img/img_index/kitten.png', import.meta.url).href
+  },
+  {
+    id: 3,
+    titulo: "3 señales de que tu gato sufre en silencio",
+    descripcion: "Aprende a identificar comportamientos que pueden indicar que tu gato no está bien.",
+    imagen: new URL('../assets/img/img_index/gato_callejero.png', import.meta.url).href
+  }
+];
+
   const imagenActual = ref(0);
   onMounted(() => {
     setInterval(() => {
@@ -96,8 +117,33 @@ const imagenes = [
             <img src="../assets/img/img_index/gato_callejero.png" alt="Gato callejero" class="img-fluid rounded shadow-sm" />
           </div>
         </div>
+         </div>
+      <div class="container mt-5 novedades">
+  <h2 class="mb-4 text-center titulo-novedades">Novedades</h2>
+
+  <div class="row">
+    
+    <div class="col-md-4 mb-4" v-for="post in posts" :key="post.id">
+      <div class="card h-100 shadow-sm">
+
+        <img :src="post.imagen" class="card-img-top" alt="imagen" />
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ post.titulo }}</h5>
+          <p class="card-text">{{ post.descripcion }}</p>
+
+          <button class="btn btn-primary mt-auto">
+            Leer más →
+          </button>
+        </div>
+
       </div>
+    </div>
+
+  </div>
+</div>
       </div>
+     
 </template>
 
 <style scoped>
@@ -186,4 +232,38 @@ button {
   text-align: center;
 }
 
+.novedades {
+  background-color: #faf8b3;
+  border-radius: 14px;
+  padding: 2rem;
+}
+
+.titulo-novedades {
+  color: #ad6119;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-title {
+  color: #ad6119;
+  font-weight: bold;
+}
+
+.card-text {
+  color: #654236;
+}
+
+.card button {
+  background-color: #f09014;
+  border: none;
+}
 </style>

@@ -1,9 +1,10 @@
 <script setup>
   const nav = [
     { name: 'Adoptar', path: 'gatos' },
-    { name: 'Iniciar Sesión', path: 'login' },
     { name: 'Colabora', path: 'colabora' },
     { name: 'Noticias', path: 'noticias' },
+    { name: 'Iniciar Sesión', path: 'login' },
+    { name: 'Registrarse', path: 'register' },
     { name: 'Contacto', path: 'contacto' }
   ] 
 </script>
