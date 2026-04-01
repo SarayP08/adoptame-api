@@ -2,9 +2,9 @@
 import { ref, onMounted } from 'vue';
 
 const imagenes = [
-  new URL('../assets/img/img_index/kitten.png', import.meta.url).href,
-  new URL('../assets/img/img_index/gato_dormido.png', import.meta.url).href, 
-  new URL('../assets/img/img_index/gato_callejero.png', import.meta.url).href
+  new URL('../assets/img/img_index/gatoC_1.png', import.meta.url).href,
+  new URL('../assets/img/img_index/gatoC_2.png', import.meta.url).href, 
+  new URL('../assets/img/img_index/gatoC_3.png', import.meta.url).href
 ];
 
 const posts = [
@@ -43,15 +43,13 @@ const posts = [
 
 
     <div class="container-fluid hero">
-
-
      <div
       class="hero-bg active" 
      :style="{ backgroundImage: `url(${imagenes[imagenActual]})` }"></div>
 
       <div class="containerTexto">
             <h1>
-            Porque cuando todo falla
+            Porque cuando todo falla,
             </h1>
             <h2>Ellos te dan la patita</h2>
             <p class="lead">
@@ -168,9 +166,8 @@ const posts = [
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: opacity 1s ease-in-out;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease-in-out;
   z-index: 0;
 }
 
@@ -182,7 +179,6 @@ const posts = [
   opacity: 0;
 }
 
-/* contenido encima */
 .containerTexto {
   position: relative;
   z-index: 2;
@@ -190,15 +186,23 @@ const posts = [
 
 .hero h1 {
   color: #ffffff;
+  font-family: 'lemonMilk';
+  font-size: 3em;
 
 }
 .hero h2 {
   color: #fff;
+  font-family: 'lemonMilk';
+  font-size: 2em;
+
 }
 
 .lead {
   color: #fff;
+  font-family: 'coolvetica';
+  font-size: 30px;
 }
+
 .leadi {
   color: #654236;
 }
@@ -208,8 +212,14 @@ button {
   border: none;
   display: flex; 
   color: rgb(255, 255, 255);
-  
+  font-family: 'lemonMilk';
 }
+
+button:hover {
+  background-color: #503e3e!important;
+  color: #ffffff;
+}
+
 .second-hero,
 .third-hero {
   background-color: #faf8b3;
@@ -263,4 +273,6 @@ button {
   background-color: #f09014;
   border: none;
 }
+
+
 </style>

@@ -49,7 +49,7 @@ body {
 }
 
 .nav-link:hover {
-  color: #df9800 !important; /* tu naranja */
+  color: #df9800 !important; 
 }
 
 .nav-link {
