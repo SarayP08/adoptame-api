@@ -7,6 +7,8 @@ import Noticias from '../views/Noticias.vue'
 import Contacto from '../views/Contacto.vue'
 import Index from '../views/Index.vue'
 import Registro from '../views/Registro.vue'
+import ContraOlvidada from '../views/ContraOlvidada.vue'
+import Terminos from '../views/TerminosCondiciones.vue'
 
 const routes = [
   { path: '/', component: Index },
@@ -15,7 +17,9 @@ const routes = [
   { path: '/registro', component: Registro },
   { path: '/colabora', component: Colabora },
   { path: '/noticias', component: Noticias },
-  { path: '/contacto', component: Contacto }
+  { path: '/contacto', component: Contacto },
+  { path: '/contra-olvidada', component: ContraOlvidada },
+  { path: '/terminos', component: Terminos }
 ]
 
 const router = createRouter({

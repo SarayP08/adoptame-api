@@ -1,6 +1,7 @@
 <template>
   <div class="container mt-5">
-    <h1>Nombre de la página</h1>
-    <p>En construcción</p>
+    <h1>Adoptar</h1>
+    <p>Página de vista de gatos en construcción</p>
+    <p>(Aquí falta el backend para ser funcional)</p>
   </div>
 </template>

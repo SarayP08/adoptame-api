@@ -106,7 +106,7 @@ const handleSubmit = () => {
         <div class="form-check text-start my-3">
           <input class="form-check-input" type="checkbox" required />
           <label class="form-check-label">
-            Acepto los términos y condiciones
+            <a href="/terminos" target="_blank">Acepto los términos y condiciones</a>
           </label>
         </div>
 
@@ -143,6 +143,8 @@ h1 {
   align-items: center;
   justify-content: center;
   position: relative;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .contenedor::before {
@@ -160,6 +162,8 @@ h1 {
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   position: relative;
   z-index: 2;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .form-floating {

@@ -40,13 +40,13 @@
           </label><br>
         </div>
         <p class="text-body-secondary text-center">
-        <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+        <a href="/contra-olvidada">¿Olvidaste tu contraseña?</a>
       </p>
         <button class="btn btn-primary w-100 py-2" type="submit">
           Iniciar Sesión
         </button><br><br>
         <p class="text-body-secondary text-center">
-        ¿No tienes una cuenta? <a href="/register">Regístrate aquí</a>
+        ¿No tienes una cuenta? <a href="/registro">Regístrate aquí</a>
       </p>
         <p class="mt-5 mb-3 text-body-secondary text-center">&copy; Pawtita - 2026</p>
       </form>
