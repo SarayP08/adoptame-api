@@ -1,10 +1,11 @@
 <script setup>
   const nav = [
-    { name: 'Adoptar', path: '/' },
-    { name: 'Iniciar Sesión', path: '/' },
-    { name: 'Colabora', path: '/' },
-    { name: 'Noticias', path: '/' },
-    { name: 'Contacto', path: '/' }
+    { name: 'Adoptar', path: 'gatos' },
+    { name: 'Colabora', path: 'colabora' },
+    { name: 'Noticias', path: 'noticias' },
+    { name: 'Iniciar Sesión', path: 'login' },
+    { name: 'Registrarse', path: 'registro' },
+    { name: 'Contacto', path: 'contacto' }
   ] 
 </script>
 
@@ -14,7 +15,10 @@
         to="/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none"
       >
-        <span class="fs-4">Pawtita</span>
+      <img src="../assets/img/img_iconos/favicon.png" alt="Logo" class="logo" width="140">
+        <span> 
+          Pawtita
+        </span>
       </router-link>
 
       <ul class="nav nav-pills">
@@ -39,18 +43,29 @@ body {
   padding: 0;
 }
 .header {
-  background-color: #7fb680;
+  background-color: #faf8b3;
   width: 100%;
-  height: 100%;
+  height: 80px;
+}
+
+.nav-link:hover {
+  color: #df9800 !important; 
 }
 
 .nav-link {
-  color: #ffffff;
-  font-weight: 500;
+  color: #654236;
+    font-family: 'coolvetica';
+    font-size: 20px;
 }
 span {
-  color: #ffffff;
-  font-weight: 700;
-  margin-left: 120px;
+  margin-top: -30px;
+  color: #654236;
+  font-size: 50px;
+  font-family: 'coolvetica';
+
+}
+
+.logo {
+  margin-top: -20px;
 }
 </style>

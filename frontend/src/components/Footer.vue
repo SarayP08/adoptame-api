@@ -10,7 +10,7 @@ const enlaces = [
 
 <template>
   <div class="container-fluid">
-    <footer class="py-3 my-4">
+    <footer class="py-3">
 
       <ul class="nav justify-content-center border-bottom">
         <li
@@ -36,21 +36,24 @@ const enlaces = [
 </template>
 
 <style scoped>
-body {
-  margin: 0;
+.container-fluid {
   padding: 0;
 }
 
- footer {
-  background-color: #756969;
-  padding: 0;
+footer {
+  background-color:  #423430;
+  padding: 1rem 0;
+  width: 100%;
 }
 
 footer .nav-link {
-  color: #fff !important;
+  color: #ffffff !important;
+  font-family: 'coolvetica';
+  font-size: 20px;
 }
 
-p {
-  color: #fff !important;
+.text-center {
+  color:#ffffff !important;
+  font-family: 'lemonMilk';
 }
 </style>
