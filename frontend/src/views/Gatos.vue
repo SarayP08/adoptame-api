@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue';
 const gatos = ref([]);
 
 onMounted(async () => {
-  const res = await fetch("https://saraypa.iesallerulloa.es/www/api/despliegueGatos.php");
+  const res = await fetch("api/despliegueGatos.php");
   gatos.value = await res.json();
 });
 </script>
@@ -23,7 +23,7 @@ onMounted(async () => {
       <h3>{{ gato.nombre }}</h3>
 
       <img 
-        :src="'https://saraypa.iesallerulloa.es/public_html' + gato.imagen" 
+        :src="gato.imagen"
         width="200"
       >
 
