@@ -3,8 +3,8 @@ session_start();
 header("Content-Type: application/json");
 
 $host = "localhost";
-$user = "sarayParedes";
-$pass = "08012004.Saray";
+$user = "root";
+$pass = "123";
 $db   = "pawtita";
 
 $conn = new mysqli($host, $user, $pass, $db);
