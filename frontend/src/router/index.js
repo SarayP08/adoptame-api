@@ -9,16 +9,19 @@ import Index from '../views/Index.vue'
 import Registro from '../views/Registro.vue'
 import ContraOlvidada from '../views/ContraOlvidada.vue'
 import Terminos from '../views/TerminosCondiciones.vue'
+import DetalleGatos from "../views/DetalleGatos.vue";
+import PanelAdministrador from "../views/PanelAdmin.vue";
 
 const routes = [
   { path: '/', component: Index },
   { path: '/gatos', component: Gatos },
+  { path: '/detalleGato/:id', component: DetalleGatos},
   { path: '/login', component: Login },
   { path: '/registro', component: Registro },
   { path: '/colabora', component: Colabora },
   { path: '/noticias', component: Noticias },
   { path: '/contacto', component: Contacto },
-  { path: '/contra-olvidada', component: ContraOlvidada },
+  { path: '/panel-admin', component: PanelAdministrador },
   { path: '/terminos', component: Terminos }
 ]
 

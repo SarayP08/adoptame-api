@@ -1,33 +1,99 @@
 <script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { API_URL } from '../config/api';
 
+const router = useRouter();
+
+const email = ref('');
+const password = ref('');
+const error = ref('');
+const cargando = ref(false);
+
+const login = async () => {
+  error.value = '';
+  cargando.value = true;
+
+  try {
+    const res = await fetch(`${API_URL}/api/login.php`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    });
+
+    const text = await res.text();
+
+    console.log('Status login:', res.status);
+    console.log('Respuesta cruda login:', text);
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      error.value = 'El servidor no está devolviendo JSON válido. Revisa la consola.';
+      return;
+    }
+
+    if (!data.ok) {
+      error.value = data.message || 'No se pudo iniciar sesión';
+      return;
+    }
+
+    router.push('/panel-admin');
+  } catch (err) {
+    console.error(err);
+    error.value = 'Error al conectar con el servidor';
+  } finally {
+    cargando.value = false;
+  }
+};
 </script>
 
 <template>
   <div class="contenedor">
   <main class="form-signin w-100 m-auto">
-      <form>
+      <form @submit.prevent="login">
         <div class="text-center">
-        <i class="mb-4 bi bi-person" style="font-size: 4.5rem; color: orange;"></i>
+          <i class="mb-4 bi bi-person" style="font-size: 4.5rem; color: orange;"></i>
         </div>
+
         <h1 class="h3 mb-3 fw-normal text-center">Iniciar Sesión</h1>
+
+        <div v-if="error" class="alert alert-danger">
+          {{ error }}
+        </div>
+
         <div class="form-floating">
           <input
+            v-model="email"
             type="email"
             class="form-control"
             id="floatingInput"
-            placeholder="name@example.com"
+            placeholder="admin@example.com"
+            required
           />
           <label for="floatingInput">Dirección de correo electrónico</label>
         </div>
-        <div class="form-floating">
+
+        <div class="form-floating mt-2">
           <input
+            v-model="password"
             type="password"
             class="form-control"
             id="floatingPassword"
-            placeholder="Password"
+            placeholder="Contraseña"
+            required
           />
           <label for="floatingPassword">Contraseña</label>
         </div>
+
         <div class="form-check text-start my-3">
           <input
             class="form-check-input"
@@ -37,21 +103,33 @@
           />
           <label class="form-check-label" for="checkDefault">
             Recordarme
-          </label><br>
+          </label>
         </div>
+
         <p class="text-body-secondary text-center">
-        <a href="/contra-olvidada">¿Olvidaste tu contraseña?</a>
-      </p>
-        <button class="btn btn-primary w-100 py-2" type="submit">
-          Iniciar Sesión
-        </button><br><br>
+          <a href="/contra-olvidada">¿Olvidaste tu contraseña?</a>
+        </p>
+
+        <button
+          class="btn btn-primary w-100 py-2"
+          type="submit"
+          :disabled="cargando"
+        >
+          {{ cargando ? 'Entrando...' : 'Iniciar Sesión' }}
+        </button>
+
+        <br><br>
+
         <p class="text-body-secondary text-center">
-        ¿No tienes una cuenta? <a href="/registro">Regístrate aquí</a>
-      </p>
-        <p class="mt-5 mb-3 text-body-secondary text-center">&copy; Pawtita - 2026</p>
+          ¿No tienes una cuenta? <a href="/registro">Regístrate aquí</a>
+        </p>
+
+        <p class="mt-5 mb-3 text-body-secondary text-center">
+          &copy; Pawtita - 2026
+        </p>
       </form>
     </main>
-    </div>
+  </div>
 </template>
 
 <style scoped>
