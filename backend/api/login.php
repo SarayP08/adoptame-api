@@ -11,14 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once 'conexion.php';
+require_once __DIR__ . '/config/conexion.php';
+
 
 $data = json_decode(file_get_contents('php://input'), true);
 
 $email = trim($data['email'] ?? '');
 $password = $data['password'] ?? '';
 
-if (!$email || !$password) {
+if ($email === '' || $password === '') {
+    http_response_code(400);
     echo json_encode([
         "ok" => false,
         "message" => "Email y contraseña son obligatorios"
@@ -26,10 +28,11 @@ if (!$email || !$password) {
     exit;
 }
 
-$sql = "SELECT id, nombre, email, password FROM administradores WHERE email = ? LIMIT 1";
+$sql = "SELECT id, nombre, apellidos, email, password, rol FROM usuarios WHERE email = ? LIMIT 1";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
+    http_response_code(500);
     echo json_encode([
         "ok" => false,
         "message" => "Error preparando la consulta",
@@ -42,9 +45,10 @@ $stmt->bind_param("s", $email);
 $stmt->execute();
 
 $result = $stmt->get_result();
-$admin = $result->fetch_assoc();
+$usuario = $result->fetch_assoc();
 
-if (!$admin || !password_verify($password, $admin['password'])) {
+if (!$usuario || $password !== $usuario['password']) {
+    http_response_code(401);
     echo json_encode([
         "ok" => false,
         "message" => "Credenciales incorrectas"
@@ -54,15 +58,18 @@ if (!$admin || !password_verify($password, $admin['password'])) {
 
 session_regenerate_id(true);
 
-$_SESSION['admin_id'] = $admin['id'];
-$_SESSION['admin_email'] = $admin['email'];
+$_SESSION['usuario_id'] = $usuario['id'];
+$_SESSION['usuario_email'] = $usuario['email'];
+$_SESSION['usuario_rol'] = $usuario['rol'];
 
 echo json_encode([
     "ok" => true,
     "message" => "Login correcto",
-    "admin" => [
-        "id" => $admin['id'],
-        "nombre" => $admin['nombre'],
-        "email" => $admin['email']
+    "usuario" => [
+        "id" => $usuario['id'],
+        "nombre" => $usuario['nombre'],
+        "apellidos" => $usuario['apellidos'],
+        "email" => $usuario['email'],
+        "rol" => $usuario['rol']
     ]
 ]);
