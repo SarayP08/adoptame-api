@@ -9,8 +9,10 @@ import Index from '../views/Index.vue'
 import Registro from '../views/Registro.vue'
 import ContraOlvidada from '../views/ContraOlvidada.vue'
 import Terminos from '../views/TerminosCondiciones.vue'
-import DetalleGatos from "../views/DetalleGatos.vue";
-import PanelAdministrador from "../views/PanelAdmin.vue";
+import DetalleGatos from "../views/DetalleGatos.vue"
+import PanelAdministrador from "../views/PanelAdmin.vue"
+import AñadirGato from "../views/AñadirGato.vue"
+
 
 const routes = [
   { path: '/', component: Index },
@@ -22,7 +24,8 @@ const routes = [
   { path: '/noticias', component: Noticias },
   { path: '/contacto', component: Contacto },
   { path: '/panel-admin', component: PanelAdministrador },
-  { path: '/terminos', component: Terminos }
+  { path: '/terminos', component: Terminos },
+  { path: '/añadirGato', component: AñadirGato }
 ]
 
 const router = createRouter({
