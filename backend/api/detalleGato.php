@@ -13,7 +13,7 @@ $user = "root";
 $pass = "123";
 $db   = "pawtita";
 
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($host, $user, $pass, 3307);
 
 $id = $_GET['id'] ?? null;
 

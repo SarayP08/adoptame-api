@@ -6,7 +6,7 @@ $user = "root";
 $password = "123";
 $database = "pawtita";
 
-$conn = new mysqli($host, $user, $password, $database);
+$conn = new mysqli($host, $user, $password, $database, 3307);
 
 if ($conn->connect_error) {
     http_response_code(500);

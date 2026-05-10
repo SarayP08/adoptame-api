@@ -13,7 +13,7 @@ $user = "root";
 $pass = "123";
 $db   = "pawtita";
 
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($host, $user, $pass, $db, 3307);
 
 if ($conn->connect_error) {
     die(json_encode(["error" => $conn->connect_error]));
