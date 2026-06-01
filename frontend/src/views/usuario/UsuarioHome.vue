@@ -1,4 +1,6 @@
 <script setup>
+import { RouterLink } from 'vue-router';
+
 import { useAuthStore } from '../../stores/auth.js';
 import {
   buildUserImage

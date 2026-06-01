@@ -1,62 +1,221 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { API_URL, buildCatImage } from '../config/api';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
+  import {
+  ref,
+  computed,
+  onMounted
+} from 'vue';
+  import { useRoute } from 'vue-router';
+  const route = useRoute();
+  import {
+  API_URL,
+  buildCatImage
+} from '../../config/api.js';
 
-const gatos = ref([]);
-const paginaActual = ref(1);
-const gatosPorPagina = 8;
-const router = useRouter();
-const auth = useAuthStore();
+  import {
+  useRouter
+} from 'vue-router';
 
-onMounted(async () => {
-  const res = await fetch("http://localhost/adoptame-api/backend/api/despliegueGatos.php");
+  import {
+  useAuthStore
+} from '../../stores/auth.js';
+
+  const router = useRouter();
+
+  const auth = useAuthStore();
+
+  const mostrarModalAuth = ref(false);
+
+  const gatoPendiente = ref(null);
+
+  /* FILTROS */
+
+  const filtroSexo = ref('');
+
+  const filtroCastrado = ref('');
+
+  /* DATOS */
+
+  const gatos = ref([]);
+
+  const paginaActual = ref(1);
+
+  const gatosPorPagina = 8;
+
+  /* CARGAR GATOS */
+
+  onMounted(async () => {
+
+  const res = await fetch(
+  `${API_URL}/api/despliegueGatos.php`
+  );
+
   gatos.value = await res.json();
 });
 
-const totalPaginas = computed(() => {
-  return Math.ceil(gatos.value.length / gatosPorPagina);
+  /* FILTRADO */
+
+  const gatosFiltrados = computed(() => {
+
+  return gatos.value.filter(gato => {
+
+  const coincideSexo =
+
+  !filtroSexo.value
+  ||
+
+  gato.sexo === filtroSexo.value;
+
+  const coincideCastrado =
+
+  !filtroCastrado.value
+  ||
+
+  gato.castrado === filtroCastrado.value;
+
+  return (
+  coincideSexo
+  &&
+  coincideCastrado
+  );
+});
 });
 
-const gatosPaginados = computed(() => {
-  const inicio = (paginaActual.value - 1) * gatosPorPagina;
+  /* PAGINACIÓN */
+
+  const totalPaginas = computed(() => {
+
+  return Math.ceil(
+  gatosFiltrados.value.length / gatosPorPagina
+  );
+});
+
+  const gatosPaginados = computed(() => {
+
+  const inicio =
+
+  (paginaActual.value - 1)
+  *
+  gatosPorPagina;
+
   const fin = inicio + gatosPorPagina;
 
-  return gatos.value.slice(inicio, fin);
+  return gatosFiltrados.value.slice(
+  inicio,
+  fin
+  );
 });
 
-const cambiarPagina = (pagina) => {
-  if (pagina >= 1 && pagina <= totalPaginas.value) {
-    paginaActual.value = pagina;
-  }
+  const cambiarPagina = (pagina) => {
+
+  if (
+  pagina >= 1
+  &&
+  pagina <= totalPaginas.value
+  ) {
+
+  paginaActual.value = pagina;
+}
 };
 
-const mostrarCastrado = (valor) => {
-  return valor === true || valor === 1 || valor === '1' || valor === 'si' || valor === 'sí'
-    ? 'Sí'
-    : 'No';
+  /* HELPERS */
+
+  const mostrarCastrado = (valor) => {
+
+  return (
+
+  valor === true
+  ||
+
+  valor === 1
+  ||
+
+  valor === '1'
+  ||
+
+  valor === 'si'
+  ||
+
+  valor === 'sí'
+
+  )
+
+  ? 'Sí'
+
+  : 'No';
 };
 
-const adoptar = (id) => {
+  /* ADOPTAR */
 
-  if (!auth.logueado) {
+  const adoptar = (id) => {
 
-    router.push('/login');
+    if (!auth.logueado) {
 
-    return;
-  }
+      gatoPendiente.value = id;
 
-  router.push(`/adoptar/${id}`);
-};
+      mostrarModalAuth.value = true;
+
+      return;
+    }
+    router.push(`/adoptar/${id}`);
+  };
 </script>
+
 
 
 <template>
 
   <div class="container mt-5 gatos-page">
-    <h1 class="mb-4 text-center titulo-gatos">Gatetes en adopción 🐱</h1>
+    <h1 class="mb-4 text-center titulo-gatos">Gatos en adopción</h1>
+    <section class="filters-box">
 
+      <div class="filter-group">
+
+        <label>Por sexo
+        </label>
+
+        <select v-model="filtroSexo">
+
+          <option value="">
+            Todos
+          </option>
+
+          <option value="macho">
+            Macho
+          </option>
+
+          <option value="hembra">
+            Hembra
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="filter-group">
+
+        <label>
+          Castrado
+        </label>
+
+        <select v-model="filtroCastrado">
+
+          <option value="">
+            Todos
+          </option>
+
+          <option value="si">
+            Sí
+          </option>
+
+          <option value="no">
+            No
+          </option>
+
+        </select>
+
+      </div>
+
+    </section>
     <div v-if="gatosPaginados.length" class="row">
       <div
         v-for="gato in gatosPaginados"
@@ -96,6 +255,13 @@ const adoptar = (id) => {
                   @click="adoptar(gato.id)"
               >
                 Adoptar
+              </button>
+
+              <button
+                  class="btn btn-primary flex-fill"
+                  @click="adoptar(gato.id)"
+              >
+                Acoger
               </button>
 
               <RouterLink
@@ -157,4 +323,232 @@ const adoptar = (id) => {
       </ul>
     </nav>
   </div>
+
+  <!-- MODAL AUTH -->
+
+  <div
+      v-if="mostrarModalAuth"
+      class="modal-overlay"
+  >
+
+    <div class="auth-modal">
+
+      <div class="modal-icon">
+        <i class="bi bi-heart-fill"></i>
+      </div>
+
+      <h2>
+        Necesitas una cuenta
+      </h2>
+
+      <p>
+        Inicia sesión o regístrate para enviar
+        solicitudes de adopción.
+      </p>
+
+      <div class="modal-actions">
+
+        <RouterLink
+            :to="`/iniciarSesion?redirect=/adoptar/${gatoPendiente}`"
+            class="modal-btn primary"
+        >
+          Iniciar sesión
+        </RouterLink>
+
+        <RouterLink
+            to="/registro"
+            class="modal-btn secondary"
+        >
+          Registrarse
+        </RouterLink>
+
+      </div>
+
+      <button
+          class="close-btn"
+          @click="mostrarModalAuth = false"
+      >
+        Cerrar
+      </button>
+
+    </div>
+
+  </div>
 </template>
+
+<style scoped>
+.filters-box {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+
+  margin-bottom: 32px;
+}
+
+.filter-group {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-group label {
+  color: #423430;
+
+  font-family: 'coolvetica';
+  font-size: 18px;
+}
+
+.filter-group select {
+  min-width: 180px;
+
+  padding: 12px 14px;
+
+  border: 2px solid #f1dc7a;
+  border-radius: 14px;
+
+  background-color: #fffdf2;
+
+  color: #423430;
+
+  font-size: 16px;
+
+  outline: none;
+}
+
+.filter-group select:focus {
+  border-color: #df9800;
+
+  box-shadow:
+      0 0 0 4px rgba(223, 152, 0, 0.15);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+      rgba(0,0,0,0.45);
+
+  z-index: 2000;
+}
+
+.auth-modal {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 32px;
+
+  background-color: white;
+
+  border-radius: 24px;
+
+  text-align: center;
+
+  box-shadow:
+      0 12px 40px rgba(0,0,0,0.2);
+}
+
+.modal-icon {
+  width: 74px;
+  height: 74px;
+
+  display: grid;
+  place-items: center;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  background-color: #fff3c4;
+
+  color: #df9800;
+
+  font-size: 34px;
+}
+
+.auth-modal h2 {
+  margin-bottom: 12px;
+
+  color: #423430;
+
+  font-family: 'coolvetica';
+  font-size: 34px;
+}
+
+.auth-modal p {
+  margin-bottom: 24px;
+
+  color: #654236;
+
+  font-size: 17px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.modal-btn {
+  flex: 1;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 18px;
+
+  border-radius: 999px;
+
+  text-decoration: none;
+
+  font-family: 'coolvetica';
+  font-size: 17px;
+
+  transition:
+      background-color 0.2s ease,
+      transform 0.2s ease;
+}
+
+.modal-btn.primary {
+  background-color: #df9800;
+  color: white;
+}
+
+.modal-btn.primary:hover {
+  background-color: #c78300;
+
+  transform: translateY(-2px);
+}
+
+.modal-btn.secondary {
+  background-color: #faf8b3;
+  color: #654236;
+}
+
+.modal-btn.secondary:hover {
+  background-color: #f1dc7a;
+
+  transform: translateY(-2px);
+}
+
+.close-btn {
+  border: none;
+
+  background: transparent;
+
+  color: #654236;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  text-decoration: underline;
+}
+</style>

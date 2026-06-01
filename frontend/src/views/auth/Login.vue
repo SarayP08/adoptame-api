@@ -1,16 +1,19 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { API_URL } from '../config/api';
-import { useAuthStore } from '../stores/auth';
-
+import { API_URL } from '../../config/api.js';
+import { useAuthStore } from '../../stores/auth.js';
 const router = useRouter();
+import {
+  useRouter,
+  useRoute
+} from 'vue-router';
 const auth = useAuthStore();
 const email = ref('');
 const password = ref('');
 const error = ref('');
 const cargando = ref(false);
 
+const route = useRoute();
 const login = async () => {
 
   error.value = '';
@@ -23,13 +26,22 @@ const login = async () => {
 
   if (resultado.ok) {
 
-    if (auth.usuario.rol === 'admin') {
+    const redirect = route.query.redirect;
 
-      router.push('/panel-admin');
+    if (redirect) {
+
+      router.push(redirect);
 
     } else {
 
-      router.push('/usuario');
+      if (auth.usuario.rol === 'admin') {
+
+        router.push('/panel-admin');
+
+      } else {
+
+        router.push('/usuario');
+      }
     }
 
   } else {
@@ -125,7 +137,7 @@ h1 {
 }
 
 .contenedor {
-  background-image: url(../assets/img/img_inicioS/gato_fondo.png);
+  background-image: url(../../assets/img/img_inicioS/gato_fondo.png);
   background-size: cover;
   background-position: center;
   min-height: 100vh;

@@ -1,7 +1,7 @@
 <script setup>
 const enlaces = [
   { name: 'Inicio', path: '/' },
-  { name: 'Regístrate', path: '/register' },
+  { name: 'Regístrate', path: '/registro' },
   { name: 'Colabora con nosotros', path: '/colabora' },
   { name: 'FAQs', path: '/faqs' },
   { name: 'Ayuda', path: '/ayuda' }

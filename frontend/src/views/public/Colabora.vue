@@ -49,7 +49,7 @@ h1, h2 {
 }
 
 .contenedor {
-  background-image: url(../assets/img/img_colabora/gato.png);
+  background-image: url(../../assets/img/img_colabora/gato.png);
   background-size: cover;
   background-position: right center;
   min-height: 100vh;

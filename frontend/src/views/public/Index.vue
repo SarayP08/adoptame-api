@@ -2,9 +2,9 @@
 import { ref, onMounted } from 'vue';
 
 const imagenes = [
-  new URL('../assets/img/img_index/gatoC_1.png', import.meta.url).href,
-  new URL('../assets/img/img_index/gatoC_2.png', import.meta.url).href, 
-  new URL('../assets/img/img_index/gatoC_3.png', import.meta.url).href
+  new URL('../../assets/img/img_index/gatoC_1.png', import.meta.url).href,
+  new URL('../../assets/img/img_index/gatoC_2.png', import.meta.url).href,
+  new URL('../../assets/img/img_index/gatoC_3.png', import.meta.url).href
 ];
 
 const posts = [
@@ -12,19 +12,19 @@ const posts = [
     id: 1,
     titulo: "La segunda oportunidad de Simón",
     descripcion: "Simón fue rescatado en condiciones difíciles, pero hoy disfruta de un hogar lleno de cariño.",
-    imagen: new URL('../assets/img/img_index/gato_dormido.png', import.meta.url).href
+    imagen: new URL('../../assets/img/img_index/gato_dormido.png', import.meta.url).href
   },
   {
     id: 2,
     titulo: "Nueva ley del bienestar animal",
     descripcion: "Te explicamos los puntos clave de la nueva normativa y cómo afecta a las adopciones.",
-    imagen: new URL('../assets/img/img_index/kitten.png', import.meta.url).href
+    imagen: new URL('../../assets/img/img_index/kitten.png', import.meta.url).href
   },
   {
     id: 3,
     titulo: "3 señales de que tu gato sufre en silencio",
     descripcion: "Aprende a identificar comportamientos que pueden indicar que tu gato no está bien.",
-    imagen: new URL('../assets/img/img_index/gato_callejero.png', import.meta.url).href
+    imagen: new URL('../../assets/img/img_index/gato_callejero.png', import.meta.url).href
   }
 ];
 
@@ -67,7 +67,7 @@ const posts = [
       <div class="container mt-5 second-hero">
         <div class="row align-items-center">
           <div class="col-lg-6">
-            <img src="../assets/img/img_index/gato_dormido.png" alt="Gato dormido" class="img-fluid rounded shadow-sm" />
+            <img src="../../assets/img/img_index/gato_dormido.png" alt="Gato dormido" class="img-fluid rounded shadow-sm" />
           </div>
           <div class="col-lg-6">
             <h1 class="display-5  lh-1 mb-3 textoHero">
@@ -112,7 +112,7 @@ const posts = [
             </div>
           </div>
           <div class="col-lg-6 text-center">
-            <img src="../assets/img/img_index/kitten.png" alt="Gato callejero" class="img-fluid rounded shadow-sm" />
+            <img src="../../assets/img/img_index/kitten.png" alt="Gato callejero" class="img-fluid rounded shadow-sm" />
           </div>
         </div>
          </div>

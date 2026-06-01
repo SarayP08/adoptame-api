@@ -28,7 +28,7 @@ h1, h2 {
 }
 
 .contenedor {
-  background-image: url(../assets/img/img_contacto/gato.png);
+  background-image: url(../../assets/img/img_contacto/gato.png);
   background-size: cover;
   background-position: center;
   min-height: 100vh;

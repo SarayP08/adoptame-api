@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { API_URL } from '../config/api'
+import { API_URL } from '../../config/api.js'
 
 
 const router = useRouter()
@@ -185,7 +185,7 @@ const handleSubmit = async () => {
         <br /><br />
 
         <p class="text-body-secondary text-center">
-          ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
+          ¿Ya tienes cuenta? <a href="/auth/Login">Inicia sesión</a>
         </p>
 
         <p class="mt-5 mb-3 text-body-secondary text-center">
@@ -203,7 +203,7 @@ h1 {
 }
 
 .contenedor {
-  background-image: url(../assets/img/img_inicioS/gato_fondo.png);
+  background-image: url(../../assets/img/img_inicioS/gato_fondo.png);
   background-size: cover;
   background-position: center;
   min-height: 70vh;

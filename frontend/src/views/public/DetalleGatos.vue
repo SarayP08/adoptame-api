@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, RouterLink } from 'vue-router';
-import { API_URL, buildCatImage } from '../config/api';
+import { API_URL, buildCatImage } from '../../config/api.js';
 const route = useRoute();
 
 const gato = ref(null);

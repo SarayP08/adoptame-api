@@ -4,7 +4,7 @@ import { ref, computed, onMounted } from 'vue';
 import {
   API_URL,
   buildCatImage
-} from '../config/api';
+} from '../../../config/api.js';
 
 const gatos = ref([]);
 const cargando = ref(true);

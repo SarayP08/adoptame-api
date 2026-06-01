@@ -1,31 +1,40 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Gatos from '../views/Gatos.vue'
-import Login from '../views/Login.vue'
-import Colabora from '../views/Colabora.vue'
-import Noticias from '../views/Noticias.vue'
-import Contacto from '../views/Contacto.vue'
-import Index from '../views/Index.vue'
-import Registro from '../views/Registro.vue'
-import ContraOlvidada from '../views/ContraOlvidada.vue'
-import Terminos from '../views/TerminosCondiciones.vue'
-import DetalleGatos from "../views/DetalleGatos.vue"
-import PanelAdministrador from "../views/PanelAdmin.vue"
-import AñadirGato from "../views/AñadirGato.vue"
+
+import Index from '../views/public/Index.vue'
+import Gatos from '../views/public/Gatos.vue'
+import DetalleGatos from "../views/public/DetalleGatos.vue"
+import Login from '../views/auth/Login.vue'
+import Colabora from '../views/public/Colabora.vue'
+import Noticias from '../views/public/Noticias.vue'
+import Contacto from '../views/public/Contacto.vue'
+import Registro from '../views/auth/Registro.vue'
+import ContraOlvidada from '../views/auth/ContraOlvidada.vue'
+import Terminos from '../views/public/TerminosCondiciones.vue'
+import PanelAdministrador from "../views/admin/PanelAdmin.vue"
+import AdminCrearGato from "../views/admin/gatos/AdminCrearGato.vue"
+import AdminVerGato from "../views/admin/gatos/AdminVerGato.vue"
+import AdminEditarGato from "../views/admin/gatos/AdminEditarGato.vue"
+import UsuarioHome from "../views/usuario/UsuarioHome.vue"
+import UsuarioAdoptarGato from "../views/usuario/UsuarioAdoptarGato.vue"
 
 
 const routes = [
   { path: '/', component: Index },
   { path: '/gatos', component: Gatos },
   { path: '/detalleGato/:id', component: DetalleGatos},
-  { path: '/login', component: Login },
+  { path: '/iniciarSesion', component: Login },
   { path: '/registro', component: Registro },
   { path: '/colabora', component: Colabora },
   { path: '/noticias', component: Noticias },
   { path: '/contacto', component: Contacto },
   { path: '/panel-admin', component: PanelAdministrador },
-  { path: '/terminos', component: Terminos },
-  { path: '/añadirGato', component: AñadirGato }
+  { path: '/terminosCondiciones', component: Terminos },
+  { path: '/añadirGato', component: AdminCrearGato },
+  { path: '/verGato', component: AdminVerGato },
+  { path: '/editarGato/:id', component: AdminEditarGato },
+  { path: '/usuario', component: UsuarioHome },
+  { path: '/adoptar/:id', component: UsuarioAdoptarGato }
 ]
 
 const router = createRouter({
