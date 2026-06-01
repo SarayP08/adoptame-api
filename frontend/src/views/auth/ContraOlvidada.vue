@@ -51,7 +51,7 @@ h1 {
 }
 
 .contenedor {
-  background-image: url(../assets/img/img_inicioS/gato_fondo.png);
+  background-image: url(../../assets/img/img_inicioS/gato_fondo.png);
   background-size: cover;
   background-position: center;
   min-height: 70vh;

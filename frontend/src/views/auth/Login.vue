@@ -2,57 +2,42 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { API_URL } from '../config/api';
+import { useAuthStore } from '../stores/auth';
 
 const router = useRouter();
-
+const auth = useAuthStore();
 const email = ref('');
 const password = ref('');
 const error = ref('');
 const cargando = ref(false);
 
 const login = async () => {
+
   error.value = '';
   cargando.value = true;
 
-  try {
-    const res = await fetch(`${API_URL}/api/login.php`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value
-      })
-    });
+  const resultado = await auth.login(
+      email.value,
+      password.value
+  );
 
-    const text = await res.text();
+  if (resultado.ok) {
 
-    console.log('Status login:', res.status);
-    console.log('Respuesta cruda login:', text);
+    if (auth.usuario.rol === 'admin') {
 
-    let data;
+      router.push('/panel-admin');
 
-    try {
-      data = JSON.parse(text);
-    } catch {
-      error.value = 'El servidor no está devolviendo JSON válido. Revisa la consola.';
-      return;
+    } else {
+
+      router.push('/usuario');
     }
 
-    if (!data.ok) {
-      error.value = data.message || 'No se pudo iniciar sesión';
-      return;
-    }
+  } else {
 
-    router.push('/panel-admin');
-  } catch (err) {
-    console.error(err);
-    error.value = 'Error al conectar con el servidor';
-  } finally {
-    cargando.value = false;
+    error.value = resultado.message;
   }
+
+  cargando.value = false;
 };
 </script>
 

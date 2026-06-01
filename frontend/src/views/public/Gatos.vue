@@ -1,10 +1,14 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { API_URL, buildUrl } from '../config/api';
+import { API_URL, buildCatImage } from '../config/api';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 
 const gatos = ref([]);
 const paginaActual = ref(1);
-const gatosPorPagina = 16;
+const gatosPorPagina = 8;
+const router = useRouter();
+const auth = useAuthStore();
 
 onMounted(async () => {
   const res = await fetch("http://localhost/adoptame-api/backend/api/despliegueGatos.php");
@@ -33,6 +37,18 @@ const mostrarCastrado = (valor) => {
     ? 'Sí'
     : 'No';
 };
+
+const adoptar = (id) => {
+
+  if (!auth.logueado) {
+
+    router.push('/login');
+
+    return;
+  }
+
+  router.push(`/adoptar/${id}`);
+};
 </script>
 
 
@@ -49,7 +65,7 @@ const mostrarCastrado = (valor) => {
       >
         <div class="card h-100 shadow-sm gato-card">
           <img
-            :src="buildUrl(gato.imagen)"
+              :src="buildCatImage(gato.imagen)"
             class="card-img-top gato-imagen"
             :alt="`Imagen de ${gato.nombre}`"
           />
@@ -59,6 +75,9 @@ const mostrarCastrado = (valor) => {
             <h5 class="card-title">{{ gato.nombre }}</h5>
 
             <ul class="list-unstyled gato-info">
+              <li>
+                <strong>Descripción:</strong> {{ gato.descripcion }}
+              </li>
               <li>
                 <strong>Edad:</strong> {{ gato.edad }}
               </li>
@@ -71,7 +90,11 @@ const mostrarCastrado = (valor) => {
             </ul>
 
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-primary flex-fill">
+
+              <button
+                  class="btn btn-primary flex-fill"
+                  @click="adoptar(gato.id)"
+              >
                 Adoptar
               </button>
 

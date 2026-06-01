@@ -11,24 +11,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $host = "localhost";
 $user = "root";
-$pass = "123";
+$pass = "";
 $db   = "pawtita";
 
 $conn = new mysqli($host, $user, $pass, $db, 3307);
 
 if ($conn->connect_error) {
-    die(json_encode(["error" => $conn->connect_error]));
+    echo json_encode(["error" => $conn->connect_error]);
+    exit;
 }
-
 
 $conn->set_charset("utf8mb4");
 
-$sql = "INSERT INTO gatos(nombre, edad, sexo, castrado, descripcion, estado, imagen)
-        VALUES (?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
+$nombre = $_POST["nombre"] ?? "";
+$edad = $_POST["edad"] ?? "";
+$sexo = $_POST["sexo"] ?? "";
+$castrado = $_POST["castrado"] ?? 0;
+$descripcion = $_POST["descripcion"] ?? "";
+$estado = $_POST["estado"] ?? "";
+$imagen = "";
+$vacunas = $_POST["vacunas"] ?? "";
 
-$gatoDetalle = $result->fetch_assoc();
-echo json_encode($gatoDetalle);
+if (isset($_FILES["imagen"])) {
+
+    $carpetaDestino = "../uploads/gatos/";
+
+    $nombreImagen = time() . "_" . basename($_FILES["imagen"]["name"]);
+
+    $rutaCompleta = $carpetaDestino . $nombreImagen;
+
+    if (move_uploaded_file($_FILES["imagen"]["tmp_name"], $rutaCompleta)) {
+        $imagen = $nombreImagen;
+    }
+}
+
+
+$sql = "INSERT INTO gatos(nombre, edad, sexo, castrado, descripcion, estado, imagen, vacunas)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+$stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+    echo json_encode([
+        "success" => false,
+        "error" => $conn->error
+    ]);
+    exit;
+}
+
+
+$stmt->bind_param(
+    "ssssssss",
+    $nombre,
+    $edad,
+    $sexo,
+    $castrado,
+    $descripcion,
+    $estado,
+    $imagen,
+    $vacunas
+);
+
+if ($stmt->execute()) {
+    echo json_encode([
+        "success" => true,
+        "id" => $conn->insert_id
+    ]);
+} else {
+    echo json_encode([
+        "success" => false,
+        "error" => $stmt->error
+    ]);
+}
+
+$stmt->close();
+$conn->close();

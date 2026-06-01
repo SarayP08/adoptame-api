@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, RouterLink } from 'vue-router';
-import { API_URL, buildUrl } from '../config/api';
-
+import { API_URL, buildCatImage } from '../config/api';
 const route = useRoute();
 
 const gato = ref(null);
@@ -55,7 +54,7 @@ onMounted(async () => {
       <div class="col-lg-6 mb-4">
         <img
           v-if="gato.imagen"
-          :src="buildUrl(gato.imagen)"
+          :src="buildCatImage(gato.imagen)"
           :alt="`Imagen de ${gato.nombre}`"
           class="img-fluid rounded shadow detalle-imagen"
         />
@@ -82,6 +81,9 @@ onMounted(async () => {
               </li>
               <li>
                 <strong>Castrado:</strong> {{ mostrarCastrado(gato.castrado) }}
+              </li>
+              <li>
+                <strong>Vacunas:</strong> {{ JSON.parse(gato.vacunas).join(', ') || 'No indicado' }}
               </li>
             </ul>
 

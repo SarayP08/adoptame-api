@@ -1,9 +1,14 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { API_URL } from '../config/api';
+import {ref , onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import {
+  API_URL,
+  buildCatImage
+} from '../config/api';
 
-const router = useRouter();
+const router = useRouter()
+const route = useRoute();
+const id = route.params.id;
 
 const formulario = ref({
   nombre: '',
@@ -45,18 +50,53 @@ const seleccionarImagen = (event) => {
   }
 };
 
+const cargarGato = async () => {
+
+  try {
+
+    const res = await fetch(
+        `${API_URL}/api/detalleGato.php?id=${id}`
+    );
+
+    const data = await res.json();
+
+    formulario.value = {
+      nombre: data.nombre,
+      edad: data.edad,
+      sexo: data.sexo,
+      castrado: data.castrado,
+      estado: data.estado,
+      descripcion: data.descripcion,
+      vacunas: JSON.parse(data.vacunas || '[]'),
+      imagen: null
+    };
+
+    vistaPrevia.value = buildCatImage(data.imagen);
+
+  } catch (err) {
+
+    console.error(err);
+
+    error.value = 'No se pudo cargar el gato';
+  }
+};
+
+onMounted(() => {
+  cargarGato();
+});
+
 const añadirGato = async () => {
   mensaje.value = '';
   error.value = '';
 
   if (
-    !formulario.value.nombre ||
-    !formulario.value.edad ||
-    !formulario.value.sexo ||
-    !formulario.value.castrado ||
-    !formulario.value.estado ||
-    !formulario.value.descripcion ||
-    !formulario.value.imagen
+      !formulario.value.nombre ||
+      !formulario.value.edad ||
+      !formulario.value.sexo ||
+      !formulario.value.castrado ||
+      !formulario.value.estado ||
+      !formulario.value.descripcion ||
+      !formulario.value.imagen
   ) {
     error.value = 'Por favor, rellena todos los campos obligatorios.';
     return;
@@ -77,8 +117,16 @@ const añadirGato = async () => {
     datos.append('castrado', formulario.value.castrado);
     datos.append('estado', formulario.value.estado);
     datos.append('descripcion', formulario.value.descripcion);
-    datos.append('vacunas', JSON.stringify(vacunasLimpias));
     datos.append('imagen', formulario.value.imagen);
+
+    const vacunasLimpias = formulario.value.vacunas.filter(
+        vacuna => vacuna.trim() !== ''
+    );
+
+    datos.append(
+        'vacunas',
+        JSON.stringify(vacunasLimpias)
+    );
 
     const respuesta = await fetch(`${API_URL}/api/añadirGato.php`, {
       method: 'POST',
@@ -98,10 +146,10 @@ const añadirGato = async () => {
       edad: '',
       sexo: '',
       castrado: '',
-      estado: '',
       descripcion: '',
-      vacunas: [''],
-      imagen: null
+      estado: '',
+      imagen: null,
+      vacunas: ['']
     };
 
     vistaPrevia.value = '';
@@ -122,7 +170,7 @@ const añadirGato = async () => {
     <section class="add-cat-card">
       <div class="add-cat-header">
         <p class="add-cat-label">Panel de administración</p>
-        <h1>Añadir gato</h1>
+        <h1>Editar gato</h1>
         <p>
           Rellena los datos del gatete para publicarlo en la sección de gatos.
         </p>
@@ -133,20 +181,20 @@ const añadirGato = async () => {
           <div class="form-group">
             <label for="nombre">Nombre</label>
             <input
-              id="nombre"
-              v-model="formulario.nombre"
-              type="text"
-              placeholder="Ej: Michi"
+                id="nombre"
+                v-model="formulario.nombre"
+                type="text"
+                placeholder="Ej: Michi"
             />
           </div>
 
           <div class="form-group">
             <label for="edad">Edad</label>
             <input
-              id="edad"
-              v-model="formulario.edad"
-              type="text"
-              placeholder="Ej: 2 años"
+                id="edad"
+                v-model="formulario.edad"
+                type="text"
+                placeholder="Ej: 2 años"
             />
           </div>
 
@@ -172,17 +220,18 @@ const añadirGato = async () => {
             <label for="estado">Estado</label>
             <select id="estado" v-model="formulario.estado">
               <option value="" disabled>Selecciona una opción</option>
-              <option value="adoptar">Adoptar</option>
-              <option value="acoger">Acoger</option>
+              <option value="adopcion">Adopción</option>
+              <option value="acogida">Acogida</option>
+              <option value="preadopcion">Preadopción</option>
             </select>
           </div>
 
           <div class="form-group full-width">
             <label for="descripcion">Descripción</label>
             <textarea
-              id="descripcion"
-              v-model="formulario.descripcion"
-              placeholder="Describe al gato (máx. 500 caracteres)"
+                id="descripcion"
+                v-model="formulario.descripcion"
+                placeholder="Describe al gato (máx. 500 caracteres)"
             />
           </div>
 
@@ -201,16 +250,16 @@ const añadirGato = async () => {
 
             <div v-for="(vacuna, index) in formulario.vacunas" :key="index" class="vaccine-row">
               <input
-                type="text"
-                v-model="formulario.vacunas[index]"
-                placeholder="Nombre de la vacuna"
+                  type="text"
+                  v-model="formulario.vacunas[index]"
+                  placeholder="Nombre de la vacuna"
               />
 
               <button
-                v-if="formulario.vacunas.length > 1"
-                class="remove-vaccine-btn"
-                type="button"
-                @click="eliminarVacuna(index)"
+                  v-if="formulario.vacunas.length > 1"
+                  class="remove-vaccine-btn"
+                  type="button"
+                  @click="eliminarVacuna(index)"
               >
                 -
               </button>
@@ -220,10 +269,10 @@ const añadirGato = async () => {
           <div class="form-group">
             <label for="imagen">Imagen</label>
             <input
-              id="imagen"
-              type="file"
-              accept="image/*"
-              @change="seleccionarImagen"
+                id="imagen"
+                type="file"
+                accept="image/*"
+                @change="seleccionarImagen"
             />
           </div>
         </div>
@@ -247,7 +296,7 @@ const añadirGato = async () => {
           </RouterLink>
 
           <button class="btn-primary" type="submit" :disabled="cargando">
-            {{ cargando ? 'Añadiendo...' : 'Añadir gato' }}
+            {{ cargando ? 'Añadiendo...' : 'Guardar cambios' }}
           </button>
         </div>
       </form>

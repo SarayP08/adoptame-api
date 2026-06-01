@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { API_URL } from '../config/api'
 
+
+const router = useRouter()
 const nombre = ref('')
 const apellidos = ref('')
 const edad = ref('')
@@ -9,22 +13,69 @@ const email = ref('')
 const movil = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+const error = ref('')
+const mensaje = ref('')
+const cargando = ref(false)
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
+
+  error.value = ''
+  mensaje.value = ''
+
   if (password.value !== confirmPassword.value) {
-    alert('Las contraseñas no coinciden')
+
+    error.value = 'Las contraseñas no coinciden'
+
     return
   }
 
-  console.log({
-    nombre: nombre.value,
-    apellidos: apellidos.value,
-    edad: edad.value,
-    genero: genero.value,
-    email: email.value,
-    movil: movil.value,
-    password: password.value
-  })
+  try {
+
+    cargando.value = true
+
+    const datos = new FormData()
+
+    datos.append('nombre', nombre.value)
+    datos.append('apellidos', apellidos.value)
+    datos.append('edad', edad.value)
+    datos.append('sexo', genero.value)
+    datos.append('email', email.value)
+    datos.append('movil', movil.value)
+    datos.append('password', password.value)
+
+    const res = await fetch(
+        `${API_URL}/api/crearUsuario.php`,
+        {
+          method: 'POST',
+          body: datos
+        }
+    )
+
+    const data = await res.json()
+
+    if (!data.success) {
+
+      error.value = data.error || 'No se pudo registrar'
+
+      return
+    }
+
+    mensaje.value = 'Cuenta creada correctamente'
+
+    setTimeout(() => {
+      router.push('/usuario')
+    }, 1200)
+
+  } catch (err) {
+
+    console.error(err)
+
+    error.value = 'Error al conectar con el servidor'
+
+  } finally {
+
+    cargando.value = false
+  }
 }
 </script>
 
@@ -38,6 +89,19 @@ const handleSubmit = () => {
         </div>
 
         <h1 class="h3 mb-3 fw-normal text-center">Crear Cuenta</h1>
+        <div
+            v-if="error"
+            class="alert alert-danger"
+        >
+          {{ error }}
+        </div>
+
+        <div
+            v-if="mensaje"
+            class="alert alert-success"
+        >
+          {{ mensaje }}
+        </div>
 
         <div class="row">
           <div class="col-md-6">
@@ -110,8 +174,12 @@ const handleSubmit = () => {
           </label>
         </div>
 
-        <button class="btn btn-primary w-100 py-2" type="submit">
-          Registrarse
+        <button
+            class="btn btn-primary w-100 py-2"
+            type="submit"
+            :disabled="cargando"
+        >
+          {{ cargando ? 'Registrando...' : 'Registrarse' }}
         </button>
 
         <br /><br />

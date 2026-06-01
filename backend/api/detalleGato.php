@@ -10,10 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 $host = "localhost";
 $user = "root";
-$pass = "123";
+$pass = "";
 $db   = "pawtita";
 
-$conn = new mysqli($host, $user, $pass, 3307);
+$conn = new mysqli($host, $user, $pass, $db, 3307);
 
 $id = $_GET['id'] ?? null;
 
