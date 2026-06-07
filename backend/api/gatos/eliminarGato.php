@@ -1,19 +1,21 @@
 <?php
+
 header("Content-Type: application/json");
 
-header('Access-Control-Allow-Origin: http://localhost:5173');
-header('Access-Control-Allow-Methods: DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Methods: DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+    http_response_code(200);
     exit;
 }
 
-require_once __DIR__ . '/config/conexion.php';
+require_once __DIR__ . "/../config/conexion.php";
 
-$id = $_GET['id'] ?? null;
+$id = intval($_GET["id"] ?? 0);
 
-if (!$id) {
+if ($id <= 0) {
 
     echo json_encode([
         "success" => false,
@@ -23,7 +25,7 @@ if (!$id) {
     exit;
 }
 
-$conn->set_charset("utf8mb4");
+/* OBTENER IMAGEN */
 
 $sqlImagen = "SELECT imagen FROM gatos WHERE id = ?";
 
@@ -37,34 +39,53 @@ $resultado = $stmtImagen->get_result();
 
 $gato = $resultado->fetch_assoc();
 
-if ($gato && $gato['imagen']) {
+$stmtImagen->close();
 
-    $rutaImagen = "../uploads/gatos/" . $gato['imagen'];
+/* ELIMINAR VACUNAS DEL GATO */
+
+$sqlVacunas = "DELETE FROM vacunas WHERE gato_id = ?";
+
+$stmtVacunas = $conn->prepare($sqlVacunas);
+
+$stmtVacunas->bind_param("i", $id);
+
+$stmtVacunas->execute();
+
+$stmtVacunas->close();
+
+/* ELIMINAR GATO */
+
+$sqlGato = "DELETE FROM gatos WHERE id = ?";
+
+$stmtGato = $conn->prepare($sqlGato);
+
+$stmtGato->bind_param("i", $id);
+
+if (!$stmtGato->execute()) {
+
+    echo json_encode([
+        "success" => false,
+        "error" => $stmtGato->error
+    ]);
+
+    exit;
+}
+
+$stmtGato->close();
+
+/* ELIMINAR IMAGEN */
+
+if (!empty($gato["imagen"])) {
+
+    $rutaImagen = __DIR__ . "/../../uploads/gatos/" . $gato["imagen"];
 
     if (file_exists($rutaImagen)) {
         unlink($rutaImagen);
     }
 }
 
-$sql = "DELETE FROM gatos WHERE id = ?";
+echo json_encode([
+    "success" => true
+]);
 
-$stmt = $conn->prepare($sql);
-
-$stmt->bind_param("i", $id);
-
-if ($stmt->execute()) {
-
-    echo json_encode([
-        "success" => true
-    ]);
-
-} else {
-
-    echo json_encode([
-        "success" => false,
-        "error" => $stmt->error
-    ]);
-}
-
-$stmt->close();
 $conn->close();
