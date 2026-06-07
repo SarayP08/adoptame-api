@@ -1,105 +1,87 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { API_URL } from '../../config/api.js'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { API_URL } from "../../config/api.js";
 
-
-const router = useRouter()
-const nombre = ref('')
-const apellidos = ref('')
-const edad = ref('')
-const genero = ref('')
-const email = ref('')
-const movil = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const error = ref('')
-const mensaje = ref('')
-const cargando = ref(false)
+const router = useRouter();
+const nombre = ref("");
+const apellidos = ref("");
+const edad = ref("");
+const genero = ref("");
+const email = ref("");
+const movil = ref("");
+const password = ref("");
+const confirmPassword = ref("");
+const error = ref("");
+const mensaje = ref("");
+const cargando = ref(false);
 
 const handleSubmit = async () => {
-
-  error.value = ''
-  mensaje.value = ''
+  error.value = "";
+  mensaje.value = "";
 
   if (password.value !== confirmPassword.value) {
+    error.value = "Las contraseñas no coinciden";
 
-    error.value = 'Las contraseñas no coinciden'
-
-    return
+    return;
   }
 
   try {
+    cargando.value = true;
 
-    cargando.value = true
+    const datos = new FormData();
 
-    const datos = new FormData()
+    datos.append("nombre", nombre.value);
+    datos.append("apellidos", apellidos.value);
+    datos.append("edad", edad.value);
+    datos.append("sexo", genero.value);
+    datos.append("email", email.value);
+    datos.append("movil", movil.value);
+    datos.append("password", password.value);
 
-    datos.append('nombre', nombre.value)
-    datos.append('apellidos', apellidos.value)
-    datos.append('edad', edad.value)
-    datos.append('sexo', genero.value)
-    datos.append('email', email.value)
-    datos.append('movil', movil.value)
-    datos.append('password', password.value)
+    const res = await fetch(`${API_URL}/api/auth/crearUsuario.php`, {
+      method: "POST",
+      body: datos,
+    });
 
-    const res = await fetch(
-        `${API_URL}/api/crearUsuario.php`,
-        {
-          method: 'POST',
-          body: datos
-        }
-    )
-
-    const data = await res.json()
+    const data = await res.json();
 
     if (!data.success) {
+      error.value = data.error || "No se pudo registrar";
 
-      error.value = data.error || 'No se pudo registrar'
-
-      return
+      return;
     }
 
-    mensaje.value = 'Cuenta creada correctamente'
+    mensaje.value = "Cuenta creada correctamente";
 
     setTimeout(() => {
-      router.push('/usuario')
-    }, 1200)
-
+      router.push("/usuario");
+    }, 1200);
   } catch (err) {
+    console.error(err);
 
-    console.error(err)
-
-    error.value = 'Error al conectar con el servidor'
+    error.value = "Error al conectar con el servidor";
 
   } finally {
-
-    cargando.value = false
+    cargando.value = false;
   }
-}
+};
 </script>
 
 <template>
   <div class="contenedor">
     <main class="form-signin w-100 m-auto">
       <form @submit.prevent="handleSubmit">
-
         <div class="text-center">
-          <i class="mb-4 bi bi-person-plus" style="font-size: 4.5rem;"></i>
+          <i class="mb-4 bi bi-person-plus" style="font-size: 4.5rem"></i>
         </div>
 
         <h1 class="h3 mb-3 fw-normal text-center">Crear Cuenta</h1>
-        <div
-            v-if="error"
-            class="alert alert-danger"
-        >
+        <div v-if="error" class="alert alert-danger">
           {{ error }}
         </div>
 
-        <div
-            v-if="mensaje"
-            class="alert alert-success"
-        >
+        <div v-if="mensaje" class="alert alert-success">
           {{ mensaje }}
         </div>
 
@@ -174,23 +156,15 @@ const handleSubmit = async () => {
           </label>
         </div>
 
-        <button
-            class="btn btn-primary w-100 py-2"
-            type="submit"
-            :disabled="cargando"
-        >
-          {{ cargando ? 'Registrando...' : 'Registrarse' }}
+        <button class="btn btn-primary w-100 py-2" type="submit" :disabled="cargando">
+          {{ cargando ? "Registrando..." : "Registrarse" }}
         </button>
 
         <br /><br />
 
-        <p class="text-body-secondary text-center">
-          ¿Ya tienes cuenta? <a href="/auth/Login">Inicia sesión</a>
-        </p>
+        <p class="text-body-secondary text-center">¿Ya tienes cuenta? <a href="/auth/Login">Inicia sesión</a></p>
 
-        <p class="mt-5 mb-3 text-body-secondary text-center">
-          &copy; Pawtita - 2026
-        </p>
+        <p class="mt-5 mb-3 text-body-secondary text-center">&copy; Pawtita - 2026</p>
       </form>
     </main>
   </div>
@@ -198,7 +172,7 @@ const handleSubmit = async () => {
 
 <style scoped>
 h1 {
-  font-family: 'lemonMilk';
+  font-family: "lemonMilk";
   color: #654236;
 }
 
@@ -227,7 +201,7 @@ h1 {
   padding: 2.5rem;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   position: relative;
   z-index: 2;
   margin-top: 2rem;

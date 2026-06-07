@@ -1,0 +1,160 @@
+:global(body) {
+  overflow-x: hidden;
+}
+
+.index-page {
+  min-height: 100vh;
+  background-image: url("../../assets/img/img_index/fondo_index.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.hero-slider {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  z-index: 0;
+}
+
+.hero-slide.active {
+  opacity: 1;
+}
+
+.containerTexto {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin-left: 60px;
+}
+
+.hero-slider h1 {
+  color: white;
+  font-family: "lemonMilk";
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  text-shadow:
+          0 4px 10px rgba(0, 0, 0, 0.25),
+          0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hero-slider h2 {
+  color: white;
+  font-family: "lemonMilk";
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+}
+
+.lead {
+  color: white;
+  font-family: "coolvetica";
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+}
+
+.btn-primary {
+  background-color: #f09014 !important;
+  border: none !important;
+  font-family: "coolvetica" !important;
+}
+
+.btn-primary:hover {
+  background-color: #d67c08 !important;
+}
+
+.second-hero,
+.third-hero {
+  padding: 2rem;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+}
+
+.textoHero {
+  color: white;
+  text-align: center;
+  font-family: "lemonMilk";
+  margin-bottom: 1.5rem;
+}
+
+.leadi {
+  color: white;
+  font-family: "coolvetica";
+  text-align: justify;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.novedades {
+  padding: 2rem;
+  text-align: center;
+}
+
+.titulo-novedades {
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(8px);
+  color: #654236;
+  font-family: "lemonMilk";
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+}
+
+.card {
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  transition:
+          transform .2s ease,
+          box-shadow .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.card-title {
+  color: #ad6119;
+  font-family: "lemonMilk";
+  font-size: 1.2rem;
+}
+
+.card-text {
+  color: #654236;
+  font-family: "coolvetica";
+}
+
+@media (max-width: 768px) {
+
+  .containerTexto {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .hero-slider {
+    min-height: 70vh;
+  }
+
+  .second-hero,
+  .third-hero {
+    padding: 1.5rem;
+  }
+}

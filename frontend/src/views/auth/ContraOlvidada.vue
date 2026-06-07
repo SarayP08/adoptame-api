@@ -1,17 +1,17 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const email = ref('')
+const email = ref("");
 
 const handleSubmit = () => {
   if (!email.value) {
-    alert('Introduce tu correo electrónico')
-    return
+    alert("Introduce tu correo electrónico");
+    return;
   }
 
-  alert(`Se ha enviado el enlace de recuperación a ${email.value}`)
-  email.value = ''
-}
+  alert(`Se ha enviado el enlace de recuperación a ${email.value}`);
+  email.value = "";
+};
 </script>
 
 <template>
@@ -23,22 +23,16 @@ const handleSubmit = () => {
         </div>
 
         <h1 class="h3 mb-3 fw-normal text-center">Recupera tu contraseña</h1>
-        <p class="text-center text-secondary mb-4">
-          Introduce tu correo y te enviaremos un enlace de recuperación.
-        </p>
+        <p class="text-center text-secondary mb-4">Introduce tu correo y te enviaremos un enlace de recuperación.</p>
 
         <div class="form-floating">
           <input v-model="email" type="email" class="form-control" id="email" placeholder="Correo electrónico" required />
           <label for="email">Correo electrónico</label>
         </div>
 
-        <button class="btn btn-primary w-100 py-2" type="submit">
-          Enviar enlace
-        </button>
+        <button class="btn btn-primary w-100 py-2" type="submit">Enviar enlace</button>
 
-        <p class="mt-4 mb-0 text-center text-secondary">
-          Si no recibes el correo, revisa la carpeta de spam.
-        </p>
+        <p class="mt-4 mb-0 text-center text-secondary">Si no recibes el correo, revisa la carpeta de spam.</p>
       </form>
     </main>
   </div>
@@ -46,7 +40,7 @@ const handleSubmit = () => {
 
 <style scoped>
 h1 {
-  font-family: 'lemonMilk';
+  font-family: "lemonMilk";
   color: #654236;
 }
 
@@ -75,7 +69,7 @@ h1 {
   padding: 2.5rem;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   position: relative;
   z-index: 2;
 }

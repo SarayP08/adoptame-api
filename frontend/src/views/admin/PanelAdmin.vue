@@ -1,121 +1,82 @@
 <script setup>
-import { useAuthStore } from '../../stores/auth.js';
+import { useAuthStore } from "../../stores/auth.js";
 
 const auth = useAuthStore();
-</script>>
+</script>
+>
 
 <template>
-
   <main class="admin-page">
-
     <section class="admin-hero">
-
       <div>
-
-        <p class="admin-label">
-          Panel de administración
-        </p>
+        <p class="admin-label">Panel de administración</p>
 
         <h1>
           Bienvenid@,
-          {{ auth.usuario?.nombre || 'Admin' }}
+          {{ auth.usuario?.nombre || "Admin" }}
         </h1>
 
-        <p class="admin-description">
-          Gestiona gatos, noticias, usuarios y solicitudes
-          desde un único lugar.
-        </p>
-
+        <p class="admin-description">Gestiona gatos, noticias, usuarios y solicitudes desde un único lugar.</p>
       </div>
-
     </section>
 
     <!-- RESUMEN -->
 
     <section class="summary-section">
-
       <div class="summary-header">
+        <h2>Resumen rápido</h2>
 
-        <h2>
-          Resumen rápido
-        </h2>
-
-        <span>
-          Vista de ejemplo
-        </span>
-
+        <span> Vista de ejemplo </span>
       </div>
 
       <div class="summary-grid">
-
         <article class="summary-card">
-
           <i class="bi bi-heart-fill"></i>
 
           <div>
             <strong>12</strong>
             <p>Gatos publicados</p>
           </div>
-
         </article>
 
         <article class="summary-card">
-
           <i class="bi bi-hourglass-split"></i>
 
           <div>
             <strong>5</strong>
             <p>Solicitudes pendientes</p>
           </div>
-
         </article>
 
         <article class="summary-card">
-
           <i class="bi bi-envelope-exclamation-fill"></i>
 
           <div>
             <strong>3</strong>
             <p>Mensajes sin responder</p>
           </div>
-
         </article>
-
       </div>
-
     </section>
 
     <section class="dashboard-grid">
-
       <!-- GESTIÓN GATOS -->
 
       <article class="dashboard-card cats-card">
-
         <div class="card-top">
-
           <div class="dashboard-icon">
             <i class="bi bi-heart-fill"></i>
           </div>
 
-          <span class="dashboard-badge">
-            CRUD
-          </span>
-
+          <span class="dashboard-badge"> CRUD </span>
         </div>
 
         <h2>Gestión de gatos</h2>
 
-        <p>
-          Administra las fichas de los gatos disponibles para adopción:
-          crear, consultar, editar o eliminar.
-        </p>
+        <p>Administra las fichas de los gatos disponibles para adopción: crear, consultar, editar o eliminar.</p>
 
         <div class="action-list">
-
-          <RouterLink
-              class="action-btn"
-              to="/verGato"
-          >
+          <RouterLink class="action-btn" to="/verGato">
             <i class="bi bi-card-list"></i>
             Ver gatos
           </RouterLink>
@@ -125,52 +86,34 @@ const auth = useAuthStore();
             Añadir gato
           </RouterLink>
 
-          <RouterLink
-              class="action-btn"
-              to="/verGato"
-          >
+          <RouterLink class="action-btn" to="/verGato">
             <i class="bi bi-card-list"></i>
             Editar gato
           </RouterLink>
 
-          <RouterLink
-              class="action-btn danger"
-              to="/verGato"
-          >
+          <RouterLink class="action-btn danger" to="/verGato">
             <i class="bi bi-card-list"></i>
             Eliminar gato
           </RouterLink>
-
-
         </div>
-
       </article>
 
       <!-- SOLICITUDES -->
 
       <article class="dashboard-card requests-card">
-
         <div class="card-top">
-
           <div class="dashboard-icon">
             <i class="bi bi-file-earmark-text-fill"></i>
           </div>
 
-          <span class="dashboard-badge">
-            Solicitudes
-          </span>
-
+          <span class="dashboard-badge"> Solicitudes </span>
         </div>
 
         <h2>Solicitudes de adopción</h2>
 
-        <p>
-          Revisa las peticiones enviadas por personas interesadas
-          en adoptar y controla su estado.
-        </p>
+        <p>Revisa las peticiones enviadas por personas interesadas en adoptar y controla su estado.</p>
 
         <div class="action-list">
-
           <button class="action-btn" type="button">
             <i class="bi bi-inbox-fill"></i>
             Ver solicitudes
@@ -190,36 +133,25 @@ const auth = useAuthStore();
             <i class="bi bi-x-circle"></i>
             Rechazadas
           </button>
-
         </div>
-
       </article>
 
       <!-- MENSAJES -->
 
       <article class="dashboard-card messages-card">
-
         <div class="card-top">
-
           <div class="dashboard-icon">
             <i class="bi bi-chat-dots-fill"></i>
           </div>
 
-          <span class="dashboard-badge">
-            Mensajes
-          </span>
-
+          <span class="dashboard-badge"> Mensajes </span>
         </div>
 
         <h2>Mensajería</h2>
 
-        <p>
-          Consulta mensajes recibidos desde contacto,
-          dudas sobre adopciones o comunicaciones pendientes.
-        </p>
+        <p>Consulta mensajes recibidos desde contacto, dudas sobre adopciones o comunicaciones pendientes.</p>
 
         <div class="action-list">
-
           <button class="action-btn" type="button">
             <i class="bi bi-envelope-fill"></i>
             Bandeja de entrada
@@ -239,36 +171,25 @@ const auth = useAuthStore();
             <i class="bi bi-archive-fill"></i>
             Archivados
           </button>
-
         </div>
-
       </article>
 
       <!-- NOTICIAS -->
 
       <article class="dashboard-card news-card">
-
         <div class="card-top">
-
           <div class="dashboard-icon">
             <i class="bi bi-newspaper"></i>
           </div>
 
-          <span class="dashboard-badge">
-            Noticias
-          </span>
-
+          <span class="dashboard-badge"> Noticias </span>
         </div>
 
         <h2>Gestión de noticias</h2>
 
-        <p>
-          Publica novedades, noticias de adopciones,
-          eventos y comunicados para la web.
-        </p>
+        <p>Publica novedades, noticias de adopciones, eventos y comunicados para la web.</p>
 
         <div class="action-list">
-
           <button class="action-btn" type="button">
             <i class="bi bi-card-list"></i>
             Ver noticias
@@ -288,36 +209,25 @@ const auth = useAuthStore();
             <i class="bi bi-trash3"></i>
             Eliminar noticia
           </button>
-
         </div>
-
       </article>
 
       <!-- USUARIOS -->
 
       <article class="dashboard-card users-card">
-
         <div class="card-top">
-
           <div class="dashboard-icon">
             <i class="bi bi-people-fill"></i>
           </div>
 
-          <span class="dashboard-badge">
-            Usuarios
-          </span>
-
+          <span class="dashboard-badge"> Usuarios </span>
         </div>
 
         <h2>Gestión de usuarios</h2>
 
-        <p>
-          Administra cuentas registradas,
-          permisos, roles y accesos al sistema.
-        </p>
+        <p>Administra cuentas registradas, permisos, roles y accesos al sistema.</p>
 
         <div class="action-list">
-
           <button class="action-btn" type="button">
             <i class="bi bi-person-lines-fill"></i>
             Ver usuarios
@@ -337,14 +247,10 @@ const auth = useAuthStore();
             <i class="bi bi-person-x-fill"></i>
             Bloquear usuario
           </button>
-
         </div>
-
       </article>
-
     </section>
   </main>
-
 </template>
 
 <style scoped>
@@ -367,8 +273,7 @@ const auth = useAuthStore();
 
   border-radius: 24px;
 
-  box-shadow:
-      0 12px 30px rgba(66, 52, 48, 0.12);
+  box-shadow: 0 12px 30px rgba(66, 52, 48, 0.12);
 }
 
 .admin-label {
@@ -376,7 +281,7 @@ const auth = useAuthStore();
 
   color: #df9800;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 18px;
 }
 
@@ -385,7 +290,7 @@ const auth = useAuthStore();
 
   color: #423430;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 44px;
 }
 
@@ -402,12 +307,12 @@ const auth = useAuthStore();
 
 .dashboard-grid {
   display: grid;
-
   grid-template-columns: repeat(3, 1fr);
-
   gap: 24px;
+}
 
-  margin-top: 32px;
+.users-card {
+  grid-column: 2;
 }
 
 .dashboard-card {
@@ -418,12 +323,11 @@ const auth = useAuthStore();
   border: 2px solid transparent;
   border-radius: 24px;
 
-  box-shadow:
-      0 12px 30px rgba(66, 52, 48, 0.12);
+  box-shadow: 0 12px 30px rgba(66, 52, 48, 0.12);
 
   transition:
-      transform 0.2s ease,
-      border-color 0.2s ease;
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .dashboard-card:hover {
@@ -465,7 +369,7 @@ const auth = useAuthStore();
 
   border-radius: 999px;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 14px;
 }
 
@@ -474,7 +378,7 @@ const auth = useAuthStore();
 
   color: #423430;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 28px;
 }
 
@@ -510,15 +414,15 @@ const auth = useAuthStore();
   border: none;
   border-radius: 999px;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 17px;
 
   text-align: left;
   text-decoration: none;
 
   transition:
-      background-color 0.2s ease,
-      transform 0.2s ease;
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .action-btn:hover {
@@ -547,8 +451,7 @@ const auth = useAuthStore();
 
   border-radius: 24px;
 
-  box-shadow:
-      0 12px 30px rgba(66, 52, 48, 0.12);
+  box-shadow: 0 12px 30px rgba(66, 52, 48, 0.12);
 }
 
 .summary-header {
@@ -564,14 +467,14 @@ const auth = useAuthStore();
 
   color: #423430;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 26px;
 }
 
 .summary-header span {
   color: #df9800;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 15px;
 }
 
@@ -606,7 +509,7 @@ const auth = useAuthStore();
 
   color: #423430;
 
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 24px;
 
   line-height: 1;
@@ -623,7 +526,6 @@ const auth = useAuthStore();
 /* RESPONSIVE */
 
 @media (max-width: 1100px) {
-
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
@@ -638,7 +540,6 @@ const auth = useAuthStore();
 }
 
 @media (max-width: 768px) {
-
   .admin-page {
     padding: 24px 16px;
   }

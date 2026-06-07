@@ -1,17 +1,14 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+import { RouterLink } from "vue-router";
 
-import { useAuthStore } from '../../stores/auth.js';
-import {
-  buildUserImage
-} from '../../config/api.js';
+import { useAuthStore } from "../../stores/auth.js";
+import { buildUserImage } from "../../config/api.js";
 
 const auth = useAuthStore();
 
 const fotoPerfil = () => {
-
   if (!auth.usuario?.foto) {
-    return buildUserImage('user_icon.jpg');
+    return buildUserImage("user_icon.jpg");
   }
 
   return buildUserImage(auth.usuario.foto);
@@ -19,200 +16,124 @@ const fotoPerfil = () => {
 </script>
 
 <template>
-
   <main class="perfil-page">
-
     <!-- HERO -->
 
     <section class="perfil-hero">
-
       <div class="perfil-info">
-
-        <img
-            :src="fotoPerfil()"
-            alt="Foto usuario"
-            class="perfil-avatar"
-        >
+        <img :src="fotoPerfil()" alt="Foto usuario" class="perfil-avatar" />
 
         <div>
-
-          <p class="perfil-label">
-            Área personal
-          </p>
+          <p class="perfil-label">Área personal</p>
 
           <h1>
             Bienvenido,
-            {{ auth.usuario?.nombre || 'Usuario' }}
+            {{ auth.usuario?.nombre || "Usuario" }}
           </h1>
 
-          <p class="perfil-description">
-            Gestiona tus favoritos, mensajes y solicitudes
-            desde tu perfil.
-          </p>
-
+          <p class="perfil-description">Gestiona tus favoritos, mensajes y solicitudes desde tu perfil.</p>
         </div>
-
       </div>
-
     </section>
 
     <!-- RESUMEN -->
 
     <section class="stats-grid">
-
       <article class="stat-card">
-
         <i class="bi bi-heart-fill"></i>
 
         <div>
           <strong>4</strong>
           <p>Guardados</p>
         </div>
-
       </article>
 
       <article class="stat-card">
-
         <i class="bi bi-chat-dots-fill"></i>
 
         <div>
           <strong>2</strong>
           <p>Mensajes</p>
         </div>
-
       </article>
 
       <article class="stat-card">
-
         <i class="bi bi-file-earmark-text-fill"></i>
 
         <div>
           <strong>1</strong>
           <p>Solicitudes</p>
         </div>
-
       </article>
-
     </section>
 
     <!-- ACCIONES -->
 
     <section class="acciones-grid">
-
       <!-- FAVORITOS -->
 
       <article class="accion-card">
-
         <div class="card-top">
-
           <div class="card-icon">
             <i class="bi bi-heart-fill"></i>
           </div>
 
-          <span class="card-badge">
-            Favoritos
-          </span>
-
+          <span class="card-badge"> Solicitudes </span>
         </div>
 
-        <h2>
-          Gatos guardados
-        </h2>
+        <h2>Solicitudes de adopción</h2>
 
-        <p>
-          Consulta los gatos que has guardado
-          para seguir sus novedades.
-        </p>
+        <p>Consulta las solicitudes de adopción que has realizado y sigue sus novedades.</p>
 
-        <RouterLink
-            to="/guardados"
-            class="card-btn"
-        >
-          Ver guardados
-        </RouterLink>
-
+        <RouterLink to="/guardados" class="card-btn"> Ver solicitudes </RouterLink>
       </article>
 
       <!-- MENSAJES -->
 
       <article class="accion-card">
-
         <div class="card-top">
-
           <div class="card-icon">
             <i class="bi bi-chat-dots-fill"></i>
           </div>
 
-          <span class="card-badge">
-            Mensajes
-          </span>
-
+          <span class="card-badge"> Mensajes </span>
         </div>
 
-        <h2>
-          Conversaciones
-        </h2>
+        <h2>Conversaciones</h2>
 
-        <p>
-          Gestiona mensajes relacionados
-          con adopciones y contacto.
-        </p>
+        <p>Gestiona mensajes relacionados con adopciones y contacto.</p>
 
-        <RouterLink
-            to="/mensajes"
-            class="card-btn"
-        >
-          Ir a mensajes
-        </RouterLink>
-
+        <RouterLink to="/mensajes" class="card-btn"> Ir a mensajes </RouterLink>
       </article>
 
       <!-- PERFIL -->
 
       <article class="accion-card">
-
         <div class="card-top">
-
           <div class="card-icon">
             <i class="bi bi-person-fill"></i>
           </div>
 
-          <span class="card-badge">
-            Cuenta
-          </span>
-
+          <span class="card-badge"> Cuenta </span>
         </div>
 
-        <h2>
-          Configuración
-        </h2>
+        <h2>Configuración</h2>
 
-        <p>
-          Edita tus datos personales,
-          contraseña y foto de perfil.
-        </p>
+        <p>Edita tus datos personales, contraseña y foto de perfil.</p>
 
-        <button class="card-btn">
-          Editar perfil
-        </button>
-
+        <button class="card-btn">Editar perfil</button>
       </article>
-
     </section>
-
   </main>
-
 </template>
 
 <style scoped>
-
 .perfil-page {
   min-height: calc(100vh - 80px);
 
   padding: 40px;
 
-  background:
-      linear-gradient(135deg, #fff8d6, #f8e8d8);
+  background: linear-gradient(135deg, #fff8d6, #f8e8d8);
 }
 
 /* HERO */
@@ -226,8 +147,7 @@ const fotoPerfil = () => {
 
   border-radius: 24px;
 
-  box-shadow:
-      0 12px 30px rgba(66, 52, 48, 0.12);
+  box-shadow: 0 12px 30px rgba(66, 52, 48, 0.12);
 }
 
 .perfil-info {
@@ -252,7 +172,7 @@ const fotoPerfil = () => {
 
   color: #df9800;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 18px;
 }
 
@@ -261,7 +181,7 @@ const fotoPerfil = () => {
 
   color: #423430;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 42px;
 }
 
@@ -296,8 +216,7 @@ const fotoPerfil = () => {
 
   border-radius: 22px;
 
-  box-shadow:
-      0 12px 30px rgba(66, 52, 48, 0.12);
+  box-shadow: 0 12px 30px rgba(66, 52, 48, 0.12);
 }
 
 .stat-card i {
@@ -311,7 +230,7 @@ const fotoPerfil = () => {
 
   color: #423430;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 28px;
 }
 
@@ -338,12 +257,11 @@ const fotoPerfil = () => {
 
   border-radius: 24px;
 
-  box-shadow:
-      0 12px 30px rgba(66, 52, 48, 0.12);
+  box-shadow: 0 12px 30px rgba(66, 52, 48, 0.12);
 
   transition:
-      transform 0.2s ease,
-      border-color 0.2s ease;
+    transform 0.2s ease,
+    border-color 0.2s ease;
 
   border: 2px solid transparent;
 }
@@ -387,7 +305,7 @@ const fotoPerfil = () => {
 
   color: #df9800;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 14px;
 }
 
@@ -396,7 +314,7 @@ const fotoPerfil = () => {
 
   color: #423430;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 28px;
 }
 
@@ -426,12 +344,12 @@ const fotoPerfil = () => {
 
   text-decoration: none;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 17px;
 
   transition:
-      background-color 0.2s ease,
-      transform 0.2s ease;
+    background-color 0.2s ease,
+    transform 0.2s ease;
 
   cursor: pointer;
 }
@@ -445,7 +363,6 @@ const fotoPerfil = () => {
 /* RESPONSIVE */
 
 @media (max-width: 1100px) {
-
   .acciones-grid {
     grid-template-columns: 1fr;
   }
@@ -456,7 +373,6 @@ const fotoPerfil = () => {
 }
 
 @media (max-width: 768px) {
-
   .perfil-page {
     padding: 24px 16px;
   }
@@ -470,5 +386,4 @@ const fotoPerfil = () => {
     font-size: 34px;
   }
 }
-
 </style>

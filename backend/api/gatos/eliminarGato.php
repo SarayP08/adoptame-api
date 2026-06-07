@@ -9,22 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "pawtita";
-
-$conn = new mysqli($host, $user, $pass, $db, 3307);
-
-if ($conn->connect_error) {
-
-    echo json_encode([
-        "success" => false,
-        "error" => $conn->connect_error
-    ]);
-
-    exit;
-}
+require_once __DIR__ . '/config/conexion.php';
 
 $id = $_GET['id'] ?? null;
 

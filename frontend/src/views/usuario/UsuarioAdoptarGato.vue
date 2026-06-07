@@ -1,256 +1,191 @@
-# AdoptarUsuario.vue
-
-```vue
+# AdoptarUsuario.vue ```vue
 <script setup>
-import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-import {
-  API_URL,
-  buildCatImage
-} from '../../config/api.js';
+import { API_URL, buildCatImage } from "../../config/api.js";
 
-import { useAuthStore } from '../../stores/auth.js';
+import { useAuthStore } from "../../stores/auth.js";
 
 const auth = useAuthStore();
-
+const esAdmin = computed(() => auth.usuario?.rol === "admin");
 const route = useRoute();
 const router = useRouter();
 
 const gatoId = route.params.id;
 
 const cargando = ref(false);
-const mensaje = ref('');
-const error = ref('');
+const mensaje = ref("");
+const error = ref("");
 
 const formulario = ref({
-  motivo: '',
-  vivienda: '',
-  experiencia: '',
-  tiempo: '',
-  otrosAnimales: '',
-  comentario: ''
+  motivo: "",
+  vivienda: "",
+  experiencia: "",
+  tiempo: "",
+  otrosAnimales: "",
+  comentario: "",
 });
 
 const enviarSolicitud = async () => {
+  if (esAdmin) {
+    return;
+  }
+  mensaje.value = "";
+  error.value = "";
 
-  mensaje.value = '';
-  error.value = '';
-
-  if (
-      !formulario.value.motivo ||
-      !formulario.value.vivienda ||
-      !formulario.value.tiempo
-  ) {
-
-    error.value = 'Completa los campos obligatorios';
+  if (!formulario.value.motivo || !formulario.value.vivienda || !formulario.value.tiempo) {
+    error.value = "Completa los campos obligatorios";
 
     return;
   }
 
   try {
-
     cargando.value = true;
 
     const datos = new FormData();
 
-    datos.append('usuario_id', auth.usuario.id);
-    datos.append('gato_id', gatoId);
+    datos.append("usuario_id", auth.usuario.id);
+    datos.append("gato_id", gatoId);
 
-    datos.append('motivo', formulario.value.motivo);
-    datos.append('vivienda', formulario.value.vivienda);
-    datos.append('experiencia', formulario.value.experiencia);
-    datos.append('tiempo', formulario.value.tiempo);
-    datos.append('otrosAnimales', formulario.value.otrosAnimales);
-    datos.append('comentario', formulario.value.comentario);
+    datos.append("motivo", formulario.value.motivo);
+    datos.append("vivienda", formulario.value.vivienda);
+    datos.append("experiencia", formulario.value.experiencia);
+    datos.append("tiempo", formulario.value.tiempo);
+    datos.append("otrosAnimales", formulario.value.otrosAnimales);
+    datos.append("comentario", formulario.value.comentario);
 
-    const res = await fetch(
-        `${API_URL}/api/crearSolicitud.php`,
-        {
-          method: 'POST',
-          body: datos
-        }
-    );
+    const res = await fetch(`${API_URL}/api/crearSolicitud.php`, {
+      method: "POST",
+      body: datos,
+    });
 
     const data = await res.json();
 
     if (!data.success) {
-
-      error.value = data.error || 'No se pudo enviar la solicitud';
+      error.value = data.error || "No se pudo enviar la solicitud";
 
       return;
     }
 
-    mensaje.value = 'Solicitud enviada correctamente 🐱';
+    mensaje.value = "Solicitud enviada correctamente 🐱";
 
     setTimeout(() => {
-      router.push('/perfil');
+      router.push("/perfil");
     }, 1500);
-
   } catch (err) {
-
     console.error(err);
 
-    error.value = 'Error al conectar con el servidor';
-
+    error.value = "Error al conectar con el servidor";
   } finally {
-
     cargando.value = false;
   }
 };
 </script>
 
 <template>
-
   <main class="adopt-page">
-
     <section class="adopt-card">
-
       <div class="adopt-header">
+        <div v-if="esAdmin" class="alert alert-warning mb-4">
+          <strong>Vista previa para administradores</strong><br />
+          Este formulario se muestra únicamente para comprobar cómo lo ven los usuarios.
+          No es posible enviar solicitudes desde una cuenta administradora.
+        </div>
 
-        <p class="adopt-label">
-          Solicitud de adopción
-        </p>
+        <p class="adopt-label">Solicitud de adopción</p>
 
-        <h1>
-          Adoptar gatete
-        </h1>
+        <h1>Adoptar gato</h1>
 
-        <p>
-          Completa el formulario para enviar tu solicitud.
-        </p>
-
+        <p>Completa el formulario para enviar tu solicitud.</p>
       </div>
 
-      <form
-          class="adopt-form"
-          @submit.prevent="enviarSolicitud"
-      >
-
+      <form class="adopt-form" @submit.prevent="enviarSolicitud">
         <div class="form-group">
-
-          <label>
-            ¿Por qué quieres adoptar?
-          </label>
+          <label>¿Por qué quieres adoptar?</label>
 
           <textarea
               v-model="formulario.motivo"
+              :disabled="esAdmin"
               placeholder="Cuéntanos tus motivos"
           />
-
         </div>
 
         <div class="form-grid">
-
           <div class="form-group">
+            <label>Tipo de vivienda</label>
 
-            <label>
-              Tipo de vivienda
-            </label>
+            <select
+                v-model="formulario.vivienda"
+                :disabled="esAdmin"
+            >
+              <option value="" disabled>Selecciona</option>
 
-            <select v-model="formulario.vivienda">
-              <option value="" disabled>
-                Selecciona
-              </option>
+              <option value="piso">Piso</option>
 
-              <option value="piso">
-                Piso
-              </option>
+              <option value="casa">Casa</option>
 
-              <option value="casa">
-                Casa
-              </option>
-
-              <option value="casa_jardin">
-                Casa con jardín
-              </option>
+              <option value="casa_jardin">Casa con jardín</option>
             </select>
-
           </div>
 
           <div class="form-group">
+            <label>Tiempo disponible diario</label>
 
-            <label>
-              Tiempo disponible diario
-            </label>
+            <select
+                v-model="formulario.tiempo"
+                :disabled="esAdmin"
+            >
+              <option value="" disabled>Selecciona</option>
 
-            <select v-model="formulario.tiempo">
-              <option value="" disabled>
-                Selecciona
-              </option>
+              <option value="1-2h">1-2 horas</option>
 
-              <option value="1-2h">
-                1-2 horas
-              </option>
+              <option value="3-5h">3-5 horas</option>
 
-              <option value="3-5h">
-                3-5 horas
-              </option>
-
-              <option value="todo_dia">
-                Gran parte del día
-              </option>
+              <option value="todo_dia">Gran parte del día</option>
             </select>
-
           </div>
-
         </div>
 
         <div class="form-group">
-
-          <label>
-            Experiencia previa con animales
-          </label>
+          <label>Experiencia previa con animales</label>
 
           <textarea
               v-model="formulario.experiencia"
+              :disabled="esAdmin"
               placeholder="Describe tu experiencia"
           />
-
         </div>
 
         <div class="form-group">
-
-          <label>
-            ¿Tienes otros animales?
-          </label>
+          <label>¿Tienes otros animales?</label>
 
           <textarea
               v-model="formulario.otrosAnimales"
+              :disabled="esAdmin"
               placeholder="Opcional"
           />
-
         </div>
 
         <div class="form-group">
-
-          <label>
-            Comentarios adicionales
-          </label>
+          <label>Comentarios adicionales</label>
 
           <textarea
               v-model="formulario.comentario"
+              :disabled="esAdmin"
               placeholder="Opcional"
           />
-
         </div>
 
-        <p
-            v-if="error"
-            class="feedback error"
-        >
+        <p v-if="error" class="feedback error">
           {{ error }}
         </p>
 
-        <p
-            v-if="mensaje"
-            class="feedback success"
-        >
+        <p v-if="mensaje" class="feedback success">
           {{ mensaje }}
         </p>
 
         <div class="form-actions">
-
           <RouterLink
               to="/gatos"
               class="btn-secondary"
@@ -261,22 +196,22 @@ const enviarSolicitud = async () => {
           <button
               class="btn-primary"
               type="submit"
-              :disabled="cargando"
+              :disabled="cargando || esAdmin"
           >
-            {{ cargando
-              ? 'Enviando...'
-              : 'Enviar solicitud' }}
+            {{
+              esAdmin
+                  ? "Solo vista previa"
+                  : cargando
+                      ? "Enviando..."
+                      : "Enviar solicitud"
+            }}
           </button>
-
         </div>
-
       </form>
-
     </section>
-
   </main>
-
 </template>
+
 
 <style scoped>
 .adopt-page {
@@ -284,8 +219,7 @@ const enviarSolicitud = async () => {
 
   padding: 40px 16px;
 
-  background:
-      linear-gradient(135deg, #fff8d6, #f8e8d8);
+  background: linear-gradient(135deg, #fff8d6, #f8e8d8);
 }
 
 .adopt-card {
@@ -299,8 +233,7 @@ const enviarSolicitud = async () => {
 
   border-radius: 24px;
 
-  box-shadow:
-      0 12px 30px rgba(66, 52, 48, 0.12);
+  box-shadow: 0 12px 30px rgba(66, 52, 48, 0.12);
 }
 
 .adopt-header {
@@ -312,7 +245,7 @@ const enviarSolicitud = async () => {
 
   color: #df9800;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 18px;
 }
 
@@ -321,7 +254,7 @@ const enviarSolicitud = async () => {
 
   color: #423430;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 42px;
 }
 
@@ -356,7 +289,7 @@ const enviarSolicitud = async () => {
 .form-group label {
   color: #423430;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 18px;
 }
 
@@ -390,8 +323,7 @@ const enviarSolicitud = async () => {
 .form-group textarea:focus {
   border-color: #df9800;
 
-  box-shadow:
-      0 0 0 4px rgba(223, 152, 0, 0.15);
+  box-shadow: 0 0 0 4px rgba(223, 152, 0, 0.15);
 }
 
 .feedback {
@@ -399,7 +331,7 @@ const enviarSolicitud = async () => {
 
   border-radius: 14px;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 17px;
 }
 
@@ -433,7 +365,7 @@ const enviarSolicitud = async () => {
 
   text-decoration: none;
 
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 17px;
 
   cursor: pointer;
@@ -458,7 +390,6 @@ const enviarSolicitud = async () => {
 }
 
 @media (max-width: 768px) {
-
   .adopt-page {
     padding: 24px 16px;
   }
@@ -476,4 +407,3 @@ const enviarSolicitud = async () => {
   }
 }
 </style>
-```

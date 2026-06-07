@@ -1,33 +1,31 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, RouterLink } from 'vue-router';
-import { API_URL, buildCatImage } from '../../config/api.js';
+import { ref, onMounted } from "vue";
+import { useRoute, RouterLink } from "vue-router";
+import { API_URL, buildCatImage } from "../../config/api.js";
 const route = useRoute();
 
 const gato = ref(null);
 const cargando = ref(true);
-const error = ref('');
+const error = ref("");
 
 const mostrarCastrado = (valor) => {
-  return valor === true || valor === 1 || valor === '1' || valor === 'si' || valor === 'sí'
-    ? 'Sí'
-    : 'No';
+  return valor === true || valor === 1 || valor === "1" || valor === "si" || valor === "sí" ? "Sí" : "No";
 };
 
 onMounted(async () => {
   try {
     const id = route.params.id;
-    const res = await fetch(`${API_URL}/api/detalleGato.php?id=${id}`);
+    const res = await fetch(`${API_URL}/api/gatos/detalleGato.php?id=${id}`);
     const data = await res.json();
 
     if (data.error) {
-      error.value = data.message || 'No se pudo cargar el gato';
+      error.value = data.message || "No se pudo cargar el gato";
       gato.value = null;
     } else {
       gato.value = data;
     }
   } catch (err) {
-    error.value = 'Error al conectar con el servidor';
+    error.value = "Error al conectar con el servidor";
     console.error(err);
   } finally {
     cargando.value = false;
@@ -45,19 +43,12 @@ onMounted(async () => {
       <h1>Ups...</h1>
       <p>{{ error }}</p>
 
-      <RouterLink to="/gatos" class="btn btn-primary">
-        Volver a gatos
-      </RouterLink>
+      <RouterLink to="/gatos" class="btn btn-primary"> Volver a gatos </RouterLink>
     </div>
 
     <div v-else-if="gato" class="row align-items-start">
       <div class="col-lg-6 mb-4">
-        <img
-          v-if="gato.imagen"
-          :src="buildCatImage(gato.imagen)"
-          :alt="`Imagen de ${gato.nombre}`"
-          class="img-fluid rounded shadow detalle-imagen"
-        />
+        <img v-if="gato.imagen" :src="buildCatImage(gato.imagen)" :alt="`Imagen de ${gato.nombre}`" class="img-fluid rounded shadow detalle-imagen" />
       </div>
 
       <div class="col-lg-6">
@@ -70,31 +61,17 @@ onMounted(async () => {
             </p>
 
             <ul class="list-unstyled detalle-info">
-              <li>
-                <strong>Nombre:</strong> {{ gato.nombre || 'No indicado' }}
-              </li>
-              <li>
-                <strong>Edad:</strong> {{ gato.edad || 'No indicada' }}
-              </li>
-              <li>
-                <strong>Sexo:</strong> {{ gato.sexo || 'No indicado' }}
-              </li>
-              <li>
-                <strong>Castrado:</strong> {{ mostrarCastrado(gato.castrado) }}
-              </li>
-              <li>
-                <strong>Vacunas:</strong> {{ JSON.parse(gato.vacunas).join(', ') || 'No indicado' }}
-              </li>
+              <li><strong>Nombre:</strong> {{ gato.nombre || "No indicado" }}</li>
+              <li><strong>Edad:</strong> {{ gato.edad || "No indicada" }}</li>
+              <li><strong>Sexo:</strong> {{ gato.sexo || "No indicado" }}</li>
+              <li><strong>Castrado:</strong> {{ mostrarCastrado(gato.castrado) }}</li>
+              <li><strong>Vacunas:</strong> {{ JSON.parse(gato.vacunas).join(", ") || "No indicado" }}</li>
             </ul>
 
             <div class="d-flex gap-2 mt-4">
-              <button class="btn btn-primary">
-                Adoptar
-              </button>
+              <button class="btn btn-primary">Adoptar</button>
 
-              <RouterLink to="/gatos" class="btn btn-outline-primary">
-                Volver
-              </RouterLink>
+              <RouterLink to="/gatos" class="btn btn-outline-primary"> Volver </RouterLink>
             </div>
           </div>
         </div>
@@ -110,7 +87,7 @@ onMounted(async () => {
 
 .titulo-detalle {
   color: #654236;
-  font-family: 'lemonMilk';
+  font-family: "lemonMilk";
   margin-bottom: 1.5rem;
 }
 
@@ -127,13 +104,13 @@ onMounted(async () => {
 
 .descripcion {
   color: #654236;
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 20px;
 }
 
 .detalle-info {
   color: #654236;
-  font-family: 'coolvetica';
+  font-family: "coolvetica";
   font-size: 18px;
 }
 
@@ -144,7 +121,7 @@ onMounted(async () => {
 .btn-primary {
   background-color: #f09014;
   border: none;
-  font-family: 'lemonMilk';
+  font-family: "lemonMilk";
 }
 
 .btn-primary:hover {
@@ -154,7 +131,7 @@ onMounted(async () => {
 .btn-outline-primary {
   border-color: #f09014;
   color: #f09014;
-  font-family: 'lemonMilk';
+  font-family: "lemonMilk";
 }
 
 .btn-outline-primary:hover {

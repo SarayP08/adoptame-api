@@ -1,40 +1,41 @@
 <script setup>
-import {ref , onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import {
-  API_URL,
-  buildCatImage
-} from '../../../config/api.js';
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { API_URL, buildCatImage } from "../../../config/api.js";
 
-const router = useRouter()
+const router = useRouter();
 const route = useRoute();
+
 const id = route.params.id;
 
 const formulario = ref({
-  nombre: '',
-  edad: '',
-  sexo: '',
-  castrado: '',
-  estado: '',
-  descripcion: '',
-  vacunas: [''],
-  imagen: null
+  nombre: "",
+  edad: "",
+  sexo: "",
+  castrado: "",
+  estado: "",
+  descripcion: "",
+  vacunas: [""],
+  imagen: null,
 });
 
-const vistaPrevia = ref('');
+const vistaPrevia = ref("");
+
 const cargando = ref(false);
-const mensaje = ref('');
-const error = ref('');
+
+const mensaje = ref("");
+
+const error = ref("");
 
 const añadirVacuna = () => {
-  formulario.value.vacunas.push('');
+  formulario.value.vacunas.push("");
 };
 
 const eliminarVacuna = (index) => {
   formulario.value.vacunas.splice(index, 1);
 
   if (formulario.value.vacunas.length === 0) {
-    formulario.value.vacunas.push('');
+    formulario.value.vacunas.push("");
   }
 };
 
@@ -45,17 +46,13 @@ const seleccionarImagen = (event) => {
 
   if (archivo) {
     vistaPrevia.value = URL.createObjectURL(archivo);
-  } else {
-    vistaPrevia.value = '';
   }
 };
 
 const cargarGato = async () => {
-
   try {
-
     const res = await fetch(
-        `${API_URL}/api/detalleGato.php?id=${id}`
+        `${API_URL}/api/gatos/detalleGato.php?id=${id}`
     );
 
     const data = await res.json();
@@ -67,8 +64,10 @@ const cargarGato = async () => {
       castrado: data.castrado,
       estado: data.estado,
       descripcion: data.descripcion,
-      vacunas: JSON.parse(data.vacunas || '[]'),
-      imagen: null
+      vacunas: data.vacunas?.length
+          ? data.vacunas
+          : [""],
+      imagen: null,
     };
 
     vistaPrevia.value = buildCatImage(data.imagen);
@@ -77,7 +76,7 @@ const cargarGato = async () => {
 
     console.error(err);
 
-    error.value = 'No se pudo cargar el gato';
+    error.value = "No se pudo cargar el gato";
   }
 };
 
@@ -85,9 +84,11 @@ onMounted(() => {
   cargarGato();
 });
 
-const añadirGato = async () => {
-  mensaje.value = '';
-  error.value = '';
+const actualizarGato = async () => {
+
+  mensaje.value = "";
+
+  error.value = "";
 
   if (
       !formulario.value.nombre ||
@@ -95,71 +96,101 @@ const añadirGato = async () => {
       !formulario.value.sexo ||
       !formulario.value.castrado ||
       !formulario.value.estado ||
-      !formulario.value.descripcion ||
-      !formulario.value.imagen
+      !formulario.value.descripcion
   ) {
-    error.value = 'Por favor, rellena todos los campos obligatorios.';
+
+    error.value =
+        "Por favor, rellena todos los campos obligatorios.";
+
     return;
   }
 
   if (formulario.value.descripcion.length > 500) {
-    error.value = 'La descripción no puede superar los 500 caracteres.';
+
+    error.value =
+        "La descripción no puede superar los 500 caracteres.";
+
     return;
   }
 
   try {
+
     cargando.value = true;
 
     const datos = new FormData();
-    datos.append('nombre', formulario.value.nombre);
-    datos.append('edad', formulario.value.edad);
-    datos.append('sexo', formulario.value.sexo);
-    datos.append('castrado', formulario.value.castrado);
-    datos.append('estado', formulario.value.estado);
-    datos.append('descripcion', formulario.value.descripcion);
-    datos.append('imagen', formulario.value.imagen);
 
-    const vacunasLimpias = formulario.value.vacunas.filter(
-        vacuna => vacuna.trim() !== ''
-    );
+    datos.append("id", id);
+
+    datos.append("nombre", formulario.value.nombre);
+
+    datos.append("edad", formulario.value.edad);
+
+    datos.append("sexo", formulario.value.sexo);
+
+    datos.append("castrado", formulario.value.castrado);
+
+    datos.append("estado", formulario.value.estado);
 
     datos.append(
-        'vacunas',
+        "descripcion",
+        formulario.value.descripcion
+    );
+
+    if (formulario.value.imagen) {
+
+      datos.append(
+          "imagen",
+          formulario.value.imagen
+      );
+    }
+
+    const vacunasLimpias =
+        formulario.value.vacunas.filter(
+            (vacuna) => vacuna.trim() !== ""
+        );
+
+    datos.append(
+        "vacunas",
         JSON.stringify(vacunasLimpias)
     );
 
-    const respuesta = await fetch(`${API_URL}/api/añadirGato.php`, {
-      method: 'POST',
-      body: datos
-    });
+    const respuesta = await fetch(
+        `${API_URL}/api/gatos/actualizarGato.php`,
+        {
+          method: "POST",
+          body: datos,
+        }
+    );
 
     const resultado = await respuesta.json();
 
-    if (!respuesta.ok || resultado.error) {
-      throw new Error(resultado.message || 'No se pudo añadir el gato.');
+    if (!resultado.success) {
+
+      throw new Error(
+          resultado.error ||
+          "No se pudo actualizar el gato."
+      );
     }
 
-    mensaje.value = 'Gato añadido correctamente 🐱';
-
-    formulario.value = {
-      nombre: '',
-      edad: '',
-      sexo: '',
-      castrado: '',
-      descripcion: '',
-      estado: '',
-      imagen: null,
-      vacunas: ['']
-    };
-
-    vistaPrevia.value = '';
+    mensaje.value =
+        "Gato actualizado correctamente 🐱";
 
     setTimeout(() => {
-      router.push('/gatos');
+
+      router.push("/gatos");
+
     }, 1200);
+
   } catch (err) {
-    error.value = err.message || 'Error al conectar con el servidor.';
+
+    console.error(err);
+
+    error.value =
+        err.message ||
+        "Error al conectar con el servidor.";
+
   } finally {
+
     cargando.value = false;
   }
 };
@@ -171,31 +202,22 @@ const añadirGato = async () => {
       <div class="add-cat-header">
         <p class="add-cat-label">Panel de administración</p>
         <h1>Editar gato</h1>
-        <p>
-          Rellena los datos del gatete para publicarlo en la sección de gatos.
-        </p>
+        <p>Cambia los datos del gato.</p>
       </div>
 
-      <form class="add-cat-form" @submit.prevent="añadirGato">
+      <form
+          class="add-cat-form"
+          @submit.prevent="actualizarGato"
+      >
         <div class="form-grid">
           <div class="form-group">
             <label for="nombre">Nombre</label>
-            <input
-                id="nombre"
-                v-model="formulario.nombre"
-                type="text"
-                placeholder="Ej: Michi"
-            />
+            <input id="nombre" v-model="formulario.nombre" type="text" placeholder="Ej: Michi" />
           </div>
 
           <div class="form-group">
             <label for="edad">Edad</label>
-            <input
-                id="edad"
-                v-model="formulario.edad"
-                type="text"
-                placeholder="Ej: 2 años"
-            />
+            <input id="edad" v-model="formulario.edad" type="text" placeholder="Ej: 2 años" />
           </div>
 
           <div class="form-group">
@@ -228,52 +250,28 @@ const añadirGato = async () => {
 
           <div class="form-group full-width">
             <label for="descripcion">Descripción</label>
-            <textarea
-                id="descripcion"
-                v-model="formulario.descripcion"
-                placeholder="Describe al gato (máx. 500 caracteres)"
-            />
+            <textarea id="descripcion" v-model="formulario.descripcion" placeholder="Describe al gato (máx. 500 caracteres)" />
           </div>
 
           <div class="form-group full-width">
             <div class="label-row">
               <label>Vacunas</label>
 
-              <span v-if="formulario.vacunas.length > 1">
-                Añade o elimina vacunas
-              </span>
+              <span v-if="formulario.vacunas.length > 1"> Añade o elimina vacunas </span>
 
-              <button class="add-vaccine-btn" type="button" @click="añadirVacuna">
-                +
-              </button>
+              <button class="add-vaccine-btn" type="button" @click="añadirVacuna">+</button>
             </div>
 
             <div v-for="(vacuna, index) in formulario.vacunas" :key="index" class="vaccine-row">
-              <input
-                  type="text"
-                  v-model="formulario.vacunas[index]"
-                  placeholder="Nombre de la vacuna"
-              />
+              <input type="text" v-model="formulario.vacunas[index]" placeholder="Nombre de la vacuna" />
 
-              <button
-                  v-if="formulario.vacunas.length > 1"
-                  class="remove-vaccine-btn"
-                  type="button"
-                  @click="eliminarVacuna(index)"
-              >
-                -
-              </button>
+              <button v-if="formulario.vacunas.length > 1" class="remove-vaccine-btn" type="button" @click="eliminarVacuna(index)">-</button>
             </div>
           </div>
 
           <div class="form-group">
             <label for="imagen">Imagen</label>
-            <input
-                id="imagen"
-                type="file"
-                accept="image/*"
-                @change="seleccionarImagen"
-            />
+            <input id="imagen" type="file" accept="image/*" @change="seleccionarImagen" />
           </div>
         </div>
 
@@ -291,12 +289,10 @@ const añadirGato = async () => {
         </p>
 
         <div class="form-actions">
-          <RouterLink to="/panel-admin" class="btn-secondary">
-            Volver
-          </RouterLink>
+          <RouterLink to="/panel-admin" class="btn-secondary"> Volver </RouterLink>
 
           <button class="btn-primary" type="submit" :disabled="cargando">
-            {{ cargando ? 'Añadiendo...' : 'Guardar cambios' }}
+            {{ cargando ? "Añadiendo..." : "Guardar cambios" }}
           </button>
         </div>
       </form>
@@ -327,14 +323,14 @@ const añadirGato = async () => {
 .add-cat-label {
   margin-bottom: 8px;
   color: #df9800;
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 18px;
 }
 
 .add-cat-header h1 {
   margin: 0;
   color: #423430;
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 42px;
 }
 
@@ -363,7 +359,7 @@ const añadirGato = async () => {
 
 .form-group label {
   color: #423430;
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 18px;
 }
 
@@ -377,7 +373,9 @@ const añadirGato = async () => {
   border-radius: 14px;
   font-size: 16px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
@@ -386,7 +384,7 @@ const añadirGato = async () => {
   box-shadow: 0 0 0 4px rgba(223, 152, 0, 0.15);
 }
 
-.form-group input[type='file'] {
+.form-group input[type="file"] {
   padding: 10px;
   cursor: pointer;
 }
@@ -403,7 +401,9 @@ const añadirGato = async () => {
   font-size: 16px;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-group textarea:focus {
@@ -424,7 +424,7 @@ const añadirGato = async () => {
 
 .label-row span {
   color: #df9800;
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 15px;
 }
 
@@ -435,7 +435,9 @@ const añadirGato = async () => {
   justify-content: center;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .add-vaccine-btn {
@@ -482,7 +484,7 @@ const añadirGato = async () => {
 .preview-box p {
   margin-bottom: 12px;
   color: #654236;
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 18px;
 }
 
@@ -498,7 +500,7 @@ const añadirGato = async () => {
   margin: 0;
   padding: 12px 16px;
   border-radius: 14px;
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 17px;
 }
 
@@ -526,11 +528,14 @@ const añadirGato = async () => {
   padding: 12px 22px;
   border: none;
   border-radius: 999px;
-  font-family: 'coolvetica', sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-size: 17px;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .btn-primary {

@@ -75,8 +75,9 @@
   color: #3f3128;
 }
 
-h1, h2 {
-  font-family: 'lemonMilk';
+h1,
+h2 {
+  font-family: "lemonMilk";
   color: #654236;
 }
 

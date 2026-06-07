@@ -1,16 +1,11 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
   <div class="contenedor">
     <div class="contenedorI">
       <div class="intro">
         <h1>¿Quieres colaborar?</h1>
-        <p>
-          Si te gustaría apoyar a nuestros gatitos, aquí tienes las formas más rápidas de hacerlo.
-          Cada donación nos ayuda a cubrir alimento, veterinario y cuidados.
-        </p>
+        <p>Si te gustaría apoyar a nuestros gatitos, aquí tienes las formas más rápidas de hacerlo. Cada donación nos ayuda a cubrir alimento, veterinario y cuidados.</p>
       </div>
 
       <div class="info-grid">
@@ -42,9 +37,9 @@
 </template>
 
 <style scoped>
-
-h1, h2 {
-  font-family: 'lemonMilk';
+h1,
+h2 {
+  font-family: "lemonMilk";
   color: #654236;
 }
 
@@ -77,7 +72,9 @@ h1, h2 {
   z-index: 1;
   color: #3e2a1f;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .contenedorI:hover {
@@ -152,7 +149,10 @@ h1, h2 {
   background: transparent;
   color: #654236;
   text-decoration: none;
-  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .btn-outline:hover {
