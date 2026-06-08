@@ -1,31 +1,12 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
-import { API_URL, buildCatImage } from "../../../config/api.js";
+import { API_URL, buildCatImage } from "../../config/api.js";
+import { useAuthStore } from "../../stores/auth.js";
 
-const props = defineProps({
-  estadoFiltro: {
-    type: String,
-    default: "",
-  },
-  titulo: {
-    type: String,
-    default: "Solicitudes",
-  },
-  descripcion: {
-    type: String,
-    default: "Revisa las peticiones y el usuario asociado a cada una.",
-  },
-});
-
+const auth = useAuthStore();
 const solicitudes = ref([]);
 const cargando = ref(true);
-
-const solicitudesFiltradas = computed(() =>
-  props.estadoFiltro
-    ? solicitudes.value.filter((solicitud) => solicitud.estado === props.estadoFiltro)
-    : solicitudes.value,
-);
 
 const normalizarTipo = (solicitud) =>
   String(solicitud.tipo ?? solicitud.tipo_solicitud ?? solicitud.estado_gato ?? "")
@@ -33,30 +14,18 @@ const normalizarTipo = (solicitud) =>
     .trim();
 
 const solicitudesAdopcion = computed(() =>
-  solicitudesFiltradas.value.filter((solicitud) => normalizarTipo(solicitud) === "adopcion"),
+  solicitudes.value.filter((solicitud) => normalizarTipo(solicitud) === "adopcion"),
 );
 
 const solicitudesAcogida = computed(() =>
-  solicitudesFiltradas.value.filter((solicitud) => normalizarTipo(solicitud) === "acogida"),
+  solicitudes.value.filter((solicitud) => normalizarTipo(solicitud) === "acogida"),
 );
 
 const nombreGato = (solicitud) =>
-  solicitud.gato_nombre ?? solicitud.nombre_gato ?? "Gato";
+  solicitud.gato_nombre ?? solicitud.nombre_gato ?? solicitud.nombre ?? "Gato";
 
 const imagenGato = (solicitud) =>
   buildCatImage(solicitud.gato_imagen ?? solicitud.imagen ?? "");
-
-const nombreUsuario = (solicitud) => {
-  const nombre = solicitud.usuario_nombre ?? solicitud.nombre_usuario ?? "";
-  const apellidos = solicitud.usuario_apellidos ?? solicitud.apellidos_usuario ?? "";
-  return `${nombre} ${apellidos}`.trim() || "Usuario";
-};
-
-const emailUsuario = (solicitud) =>
-  solicitud.usuario_email ?? solicitud.email_usuario ?? solicitud.email ?? "Sin email";
-
-const movilUsuario = (solicitud) =>
-  solicitud.usuario_movil ?? solicitud.movil_usuario ?? solicitud.movil ?? "Sin móvil";
 
 const fechaSolicitud = (solicitud) => {
   const fecha = solicitud.fecha ?? solicitud.fecha_solicitud ?? solicitud.created_at;
@@ -70,9 +39,14 @@ const claseEstado = (estado) =>
 
 onMounted(async () => {
   try {
-    const respuesta = await fetch(`${API_URL}/api/gatos/solicitudGato.php`, {
-      credentials: "include",
-    });
+    if (!auth.usuario?.id) {
+      await auth.comprobarSesion();
+    }
+
+    const respuesta = await fetch(
+      `${API_URL}/api/gatos/solicitudGato.php?usuario_id=${auth.usuario?.id}`,
+      { credentials: "include" },
+    );
     const texto = await respuesta.text();
     const datos = texto ? JSON.parse(texto) : [];
 
@@ -89,42 +63,30 @@ onMounted(async () => {
 <template>
   <main class="solicitudes-page">
     <header class="solicitudes-header">
-      <div>
-        <p>Panel de administración</p>
-        <h1>{{ titulo }}</h1>
-        <span>{{ descripcion }}</span>
-      </div>
-
-      <RouterLink to="/panel-admin" class="volver-btn">Volver al panel</RouterLink>
+      <p>Área personal</p>
+      <h1>Mis solicitudes</h1>
+      <span>Consulta por separado tus solicitudes de adopción y acogida.</span>
     </header>
 
     <p v-if="cargando" class="mensaje-estado">Cargando solicitudes...</p>
 
     <template v-else>
-      <section
-        v-for="grupo in [
-          { tipo: 'adopcion', titulo: 'Solicitudes de adopción', datos: solicitudesAdopcion },
-          { tipo: 'acogida', titulo: 'Solicitudes de acogida', datos: solicitudesAcogida },
-        ]"
-        :key="grupo.tipo"
-        class="tipo-solicitud"
-      >
+      <section class="tipo-solicitud">
         <div class="seccion-titulo">
           <div>
-            <p>{{ grupo.tipo === "adopcion" ? "Adopción" : "Acogida" }}</p>
-            <h2>{{ grupo.titulo }}</h2>
+            <p>Adopción</p>
+            <h2>Solicitudes de adopción</h2>
           </div>
-          <span>{{ grupo.datos.length }}</span>
+          <span>{{ solicitudesAdopcion.length }}</span>
         </div>
 
-        <div v-if="grupo.datos.length" class="solicitudes-grid">
+        <div v-if="solicitudesAdopcion.length" class="solicitudes-grid">
           <article
-            v-for="solicitud in grupo.datos"
+            v-for="solicitud in solicitudesAdopcion"
             :key="solicitud.id"
             class="solicitud-card"
           >
             <img :src="imagenGato(solicitud)" :alt="`Imagen de ${nombreGato(solicitud)}`" />
-
             <div class="card-contenido">
               <div class="card-cabecera">
                 <h3>{{ nombreGato(solicitud) }}</h3>
@@ -132,39 +94,76 @@ onMounted(async () => {
                   {{ solicitud.estado || "Pendiente" }}
                 </span>
               </div>
-
-              <div class="usuario-info">
-                <strong><i class="bi bi-person-fill"></i> {{ nombreUsuario(solicitud) }}</strong>
-                <span><i class="bi bi-envelope"></i> {{ emailUsuario(solicitud) }}</span>
-                <span><i class="bi bi-telephone"></i> {{ movilUsuario(solicitud) }}</span>
+              <p><i class="bi bi-calendar3"></i> {{ fechaSolicitud(solicitud) }}</p>
+              <div
+                v-if="solicitud.estado === 'rechazada' && solicitud.comentario_admin"
+                class="comentario-rechazo"
+              >
+                <strong>Motivo del rechazo</strong>
+                <p>{{ solicitud.comentario_admin }}</p>
               </div>
-
-              <p class="fecha">
-                <i class="bi bi-calendar3"></i> {{ fechaSolicitud(solicitud) }}
-              </p>
-
-              <div class="card-acciones">
-                <RouterLink
-                  v-if="solicitud.gato_id"
-                  :to="`/detalleGato/${solicitud.gato_id}`"
-                  class="detalle-btn"
-                >
-                  Ver gato
-                </RouterLink>
-                <RouterLink
-                  :to="`/admin/solicitudes/${solicitud.id}`"
-                  class="gestionar-btn"
-                >
-                  Gestionar
-                </RouterLink>
-              </div>
+              <RouterLink
+                v-if="solicitud.gato_id"
+                :to="`/detalleGato/${solicitud.gato_id}`"
+                class="detalle-btn"
+              >
+                Ver gato
+              </RouterLink>
             </div>
           </article>
         </div>
 
         <div v-else class="seccion-vacia">
-          <i class="bi bi-inbox"></i>
-          <p>No hay solicitudes de {{ grupo.tipo }}.</p>
+          <i class="bi bi-house-heart"></i>
+          <p>No tienes solicitudes de adopción.</p>
+        </div>
+      </section>
+
+      <section class="tipo-solicitud">
+        <div class="seccion-titulo">
+          <div>
+            <p>Acogida</p>
+            <h2>Solicitudes de acogida</h2>
+          </div>
+          <span>{{ solicitudesAcogida.length }}</span>
+        </div>
+
+        <div v-if="solicitudesAcogida.length" class="solicitudes-grid">
+          <article
+            v-for="solicitud in solicitudesAcogida"
+            :key="solicitud.id"
+            class="solicitud-card"
+          >
+            <img :src="imagenGato(solicitud)" :alt="`Imagen de ${nombreGato(solicitud)}`" />
+            <div class="card-contenido">
+              <div class="card-cabecera">
+                <h3>{{ nombreGato(solicitud) }}</h3>
+                <span :class="['estado', claseEstado(solicitud.estado)]">
+                  {{ solicitud.estado || "Pendiente" }}
+                </span>
+              </div>
+              <p><i class="bi bi-calendar3"></i> {{ fechaSolicitud(solicitud) }}</p>
+              <div
+                v-if="solicitud.estado === 'rechazada' && solicitud.comentario_admin"
+                class="comentario-rechazo"
+              >
+                <strong>Motivo del rechazo</strong>
+                <p>{{ solicitud.comentario_admin }}</p>
+              </div>
+              <RouterLink
+                v-if="solicitud.gato_id"
+                :to="`/detalleGato/${solicitud.gato_id}`"
+                class="detalle-btn"
+              >
+                Ver gato
+              </RouterLink>
+            </div>
+          </article>
+        </div>
+
+        <div v-else class="seccion-vacia">
+          <i class="bi bi-clock-history"></i>
+          <p>No tienes solicitudes de acogida.</p>
         </div>
       </section>
     </template>
@@ -179,10 +178,6 @@ onMounted(async () => {
 }
 
 .solicitudes-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
   margin-bottom: 36px;
 }
 
@@ -206,7 +201,7 @@ onMounted(async () => {
   font-size: clamp(38px, 5vw, 54px);
 }
 
-.solicitudes-header > div > span {
+.solicitudes-header > span {
   color: #654236;
 }
 
@@ -214,21 +209,16 @@ onMounted(async () => {
   margin-bottom: 42px;
 }
 
-.seccion-titulo,
-.card-cabecera {
+.seccion-titulo {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-}
-
-.seccion-titulo {
   margin-bottom: 18px;
 }
 
-.seccion-titulo h2,
-.card-cabecera h3 {
+.seccion-titulo h2 {
   margin: 0;
+  font-size: 30px;
 }
 
 .seccion-titulo > span {
@@ -243,7 +233,7 @@ onMounted(async () => {
 
 .solicitudes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 340px));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 320px));
   gap: 24px;
 }
 
@@ -264,21 +254,20 @@ onMounted(async () => {
   padding: 20px;
 }
 
-.usuario-info {
-  display: grid;
-  gap: 6px;
-  margin: 16px 0;
-  padding: 14px;
-  border-radius: 14px;
-  background: #fff8d6;
-  color: #654236;
+.card-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.usuario-info strong {
-  color: #423430;
+.card-cabecera h3 {
+  margin: 0;
+  font-size: 24px;
 }
 
-.fecha {
+.card-contenido p {
+  margin: 14px 0;
   color: #654236;
 }
 
@@ -302,10 +291,22 @@ onMounted(async () => {
   color: #9c3434;
 }
 
-.volver-btn,
-.detalle-btn,
-.gestionar-btn {
+.comentario-rechazo {
+  margin: 14px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8dddd;
+  color: #7d2929;
+}
+
+.comentario-rechazo p {
+  margin: 5px 0 0;
+  color: inherit;
+}
+
+.detalle-btn {
   display: inline-flex;
+  width: 100%;
   justify-content: center;
   padding: 10px 18px;
   border-radius: 999px;
@@ -313,16 +314,6 @@ onMounted(async () => {
   color: white;
   font-family: "coolvetica";
   text-decoration: none;
-}
-
-.detalle-btn {
-  background: #654236;
-}
-
-.card-acciones {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
 }
 
 .seccion-vacia,
@@ -343,12 +334,5 @@ onMounted(async () => {
 
 .seccion-vacia p {
   margin: 0;
-}
-
-@media (max-width: 650px) {
-  .solicitudes-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
 }
 </style>

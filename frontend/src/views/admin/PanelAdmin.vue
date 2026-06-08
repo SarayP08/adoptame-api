@@ -1,9 +1,37 @@
 <script setup>
+import { onMounted, ref } from "vue";
+import { API_URL } from "../../config/api.js";
 import { useAuthStore } from "../../stores/auth.js";
 
 const auth = useAuthStore();
+const cargandoResumen = ref(true);
+const errorResumen = ref("");
+const resumen = ref({
+  gatos_publicados: 0,
+  solicitudes_pendientes: 0,
+  mensajes_sin_responder: 0,
+});
+
+onMounted(async () => {
+  try {
+    const respuesta = await fetch(`${API_URL}/api/admin/resumenPanel.php`, {
+      credentials: "include",
+    });
+    const datos = await respuesta.json();
+
+    if (!respuesta.ok || !datos.success) {
+      throw new Error(datos.error || "No se pudo cargar el resumen");
+    }
+
+    resumen.value = datos.resumen;
+  } catch (error) {
+    console.error("No se pudo cargar el resumen del panel", error);
+    errorResumen.value = "No se pudo actualizar el resumen.";
+  } finally {
+    cargandoResumen.value = false;
+  }
+});
 </script>
->
 
 <template>
   <main class="admin-page">
@@ -26,7 +54,7 @@ const auth = useAuthStore();
       <div class="summary-header">
         <h2>Resumen rápido</h2>
 
-        <span> Vista de ejemplo </span>
+        <span>{{ cargandoResumen ? "Actualizando..." : "Datos actuales" }}</span>
       </div>
 
       <div class="summary-grid">
@@ -34,7 +62,7 @@ const auth = useAuthStore();
           <i class="bi bi-heart-fill"></i>
 
           <div>
-            <strong>12</strong>
+            <strong>{{ cargandoResumen ? "..." : resumen.gatos_publicados }}</strong>
             <p>Gatos publicados</p>
           </div>
         </article>
@@ -43,7 +71,7 @@ const auth = useAuthStore();
           <i class="bi bi-hourglass-split"></i>
 
           <div>
-            <strong>5</strong>
+            <strong>{{ cargandoResumen ? "..." : resumen.solicitudes_pendientes }}</strong>
             <p>Solicitudes pendientes</p>
           </div>
         </article>
@@ -52,11 +80,13 @@ const auth = useAuthStore();
           <i class="bi bi-envelope-exclamation-fill"></i>
 
           <div>
-            <strong>3</strong>
+            <strong>{{ cargandoResumen ? "..." : resumen.mensajes_sin_responder }}</strong>
             <p>Mensajes sin responder</p>
           </div>
         </article>
       </div>
+
+      <p v-if="errorResumen" class="summary-error">{{ errorResumen }}</p>
     </section>
 
     <section class="dashboard-grid">
@@ -114,25 +144,25 @@ const auth = useAuthStore();
         <p>Revisa las peticiones enviadas por personas interesadas en adoptar y controla su estado.</p>
 
         <div class="action-list">
-          <button class="action-btn" type="button">
+          <RouterLink class="action-btn" to="/admin/solicitudes">
             <i class="bi bi-inbox-fill"></i>
             Ver solicitudes
-          </button>
+          </RouterLink>
 
-          <button class="action-btn" type="button">
+          <RouterLink class="action-btn" to="/admin/solicitudes/aceptadas">
             <i class="bi bi-check-circle"></i>
             Aceptadas
-          </button>
+          </RouterLink>
 
-          <button class="action-btn" type="button">
+          <RouterLink class="action-btn" to="/admin/solicitudes/pendientes">
             <i class="bi bi-hourglass-split"></i>
             Pendientes
-          </button>
+          </RouterLink>
 
-          <button class="action-btn danger" type="button">
+          <RouterLink class="action-btn danger" to="/admin/solicitudes/rechazadas">
             <i class="bi bi-x-circle"></i>
             Rechazadas
-          </button>
+          </RouterLink>
         </div>
       </article>
 
@@ -152,24 +182,24 @@ const auth = useAuthStore();
         <p>Consulta mensajes recibidos desde contacto, dudas sobre adopciones o comunicaciones pendientes.</p>
 
         <div class="action-list">
-          <button class="action-btn" type="button">
+          <RouterLink class="action-btn" to="/admin/mensajes">
             <i class="bi bi-envelope-fill"></i>
             Bandeja de entrada
-          </button>
+          </RouterLink>
 
-          <button class="action-btn" type="button">
+          <RouterLink class="action-btn" to="/admin/mensajes?estado=respondidos">
             <i class="bi bi-reply-fill"></i>
             Respondidos
-          </button>
+          </RouterLink>
 
-          <button class="action-btn" type="button">
+          <RouterLink class="action-btn" to="/admin/mensajes?estado=pendientes">
             <i class="bi bi-envelope-exclamation-fill"></i>
             Sin responder
-          </button>
+          </RouterLink>
 
-          <button class="action-btn danger" type="button">
+          <button class="action-btn danger" type="button" disabled>
             <i class="bi bi-archive-fill"></i>
-            Archivados
+            Archivados (próximamente)
           </button>
         </div>
       </article>
@@ -484,6 +514,13 @@ const auth = useAuthStore();
   grid-template-columns: repeat(3, 1fr);
 
   gap: 14px;
+}
+
+.summary-error {
+  min-height: auto;
+  margin: 14px 0 0;
+  color: #b85c4c;
+  font-size: 14px;
 }
 
 .summary-card {

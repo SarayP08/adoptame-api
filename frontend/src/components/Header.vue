@@ -24,6 +24,7 @@ const navAdmin = [{ name: "Panel de gestión", path: "/panel-admin" }];
 const navUsuario = [
   { name: "Adoptar", path: "/gatos" },
   { name: "Guardados", path: "/guardados" },
+  { name: "Solicitudes", path: "/solicitudes" },
   { name: "Mensajes", path: "/mensajes" },
   { name: "Noticias", path: "/noticias" },
   { name: "Colabora", path: "/colabora" },

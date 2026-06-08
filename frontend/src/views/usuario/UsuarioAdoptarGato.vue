@@ -1,10 +1,7 @@
-# AdoptarUsuario.vue ```vue
 <script setup>
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-import { API_URL, buildCatImage } from "../../config/api.js";
-
+import { API_URL } from "../../config/api.js";
 import { useAuthStore } from "../../stores/auth.js";
 
 const auth = useAuthStore();
@@ -17,6 +14,9 @@ const gatoId = route.params.id;
 const cargando = ref(false);
 const mensaje = ref("");
 const error = ref("");
+const tipoSolicitud = ref(
+  route.query.tipo === "acogida" ? "acogida" : "adopcion",
+);
 
 const formulario = ref({
   motivo: "",
@@ -28,9 +28,10 @@ const formulario = ref({
 });
 
 const enviarSolicitud = async () => {
-  if (esAdmin) {
+  if (esAdmin.value) {
     return;
   }
+
   mensaje.value = "";
   error.value = "";
 
@@ -45,33 +46,36 @@ const enviarSolicitud = async () => {
 
     const datos = new FormData();
 
-    datos.append("usuario_id", auth.usuario.id);
     datos.append("gato_id", gatoId);
-
+    datos.append("tipo_solicitud", tipoSolicitud.value);
     datos.append("motivo", formulario.value.motivo);
     datos.append("vivienda", formulario.value.vivienda);
     datos.append("experiencia", formulario.value.experiencia);
     datos.append("tiempo", formulario.value.tiempo);
-    datos.append("otrosAnimales", formulario.value.otrosAnimales);
+    datos.append("otros_animales", formulario.value.otrosAnimales);
     datos.append("comentario", formulario.value.comentario);
 
-    const res = await fetch(`${API_URL}/api/crearSolicitud.php`, {
+    const res = await fetch(`${API_URL}/api/gatos/solicitudGato.php`, {
       method: "POST",
+      credentials: "include",
       body: datos,
     });
 
     const data = await res.json();
 
-    if (!data.success) {
+    if (!res.ok || !data.success) {
       error.value = data.error || "No se pudo enviar la solicitud";
 
       return;
     }
 
-    mensaje.value = "Solicitud enviada correctamente 🐱";
+    mensaje.value =
+      tipoSolicitud.value === "acogida"
+        ? "Solicitud de acogida enviada correctamente 🏠"
+        : "Solicitud de adopción enviada correctamente 🐱";
 
     setTimeout(() => {
-      router.push("/perfil");
+      router.push("/solicitudes");
     }, 1500);
   } catch (err) {
     console.error(err);
@@ -93,21 +97,28 @@ const enviarSolicitud = async () => {
           No es posible enviar solicitudes desde una cuenta administradora.
         </div>
 
-        <p class="adopt-label">Solicitud de adopción</p>
+        <p class="adopt-label">
+          Solicitud de {{ tipoSolicitud === "acogida" ? "acogida" : "adopción" }}
+        </p>
 
-        <h1>Adoptar gato</h1>
-
+        <h1>{{ tipoSolicitud === "acogida" ? "Acoger gato" : "Adoptar gato" }}</h1>
         <p>Completa el formulario para enviar tu solicitud.</p>
       </div>
 
       <form class="adopt-form" @submit.prevent="enviarSolicitud">
         <div class="form-group">
-          <label>¿Por qué quieres adoptar?</label>
+          <label>
+            {{
+              tipoSolicitud === "acogida"
+                ? "¿Por qué quieres acoger temporalmente a este gato?"
+                : "¿Por qué quieres adoptar?"
+            }}
+          </label>
 
           <textarea
-              v-model="formulario.motivo"
-              :disabled="esAdmin"
-              placeholder="Cuéntanos tus motivos"
+            v-model="formulario.motivo"
+            :disabled="esAdmin"
+            placeholder="Cuéntanos tus motivos"
           />
         </div>
 
@@ -115,10 +126,7 @@ const enviarSolicitud = async () => {
           <div class="form-group">
             <label>Tipo de vivienda</label>
 
-            <select
-                v-model="formulario.vivienda"
-                :disabled="esAdmin"
-            >
+            <select v-model="formulario.vivienda" :disabled="esAdmin">
               <option value="" disabled>Selecciona</option>
 
               <option value="piso">Piso</option>
@@ -132,10 +140,7 @@ const enviarSolicitud = async () => {
           <div class="form-group">
             <label>Tiempo disponible diario</label>
 
-            <select
-                v-model="formulario.tiempo"
-                :disabled="esAdmin"
-            >
+            <select v-model="formulario.tiempo" :disabled="esAdmin">
               <option value="" disabled>Selecciona</option>
 
               <option value="1-2h">1-2 horas</option>
@@ -151,9 +156,9 @@ const enviarSolicitud = async () => {
           <label>Experiencia previa con animales</label>
 
           <textarea
-              v-model="formulario.experiencia"
-              :disabled="esAdmin"
-              placeholder="Describe tu experiencia"
+            v-model="formulario.experiencia"
+            :disabled="esAdmin"
+            placeholder="Describe tu experiencia"
           />
         </div>
 
@@ -161,9 +166,9 @@ const enviarSolicitud = async () => {
           <label>¿Tienes otros animales?</label>
 
           <textarea
-              v-model="formulario.otrosAnimales"
-              :disabled="esAdmin"
-              placeholder="Opcional"
+            v-model="formulario.otrosAnimales"
+            :disabled="esAdmin"
+            placeholder="Opcional"
           />
         </div>
 
@@ -171,9 +176,9 @@ const enviarSolicitud = async () => {
           <label>Comentarios adicionales</label>
 
           <textarea
-              v-model="formulario.comentario"
-              :disabled="esAdmin"
-              placeholder="Opcional"
+            v-model="formulario.comentario"
+            :disabled="esAdmin"
+            placeholder="Opcional"
           />
         </div>
 
@@ -186,24 +191,15 @@ const enviarSolicitud = async () => {
         </p>
 
         <div class="form-actions">
-          <RouterLink
-              to="/gatos"
-              class="btn-secondary"
-          >
-            Volver
-          </RouterLink>
+          <RouterLink to="/gatos" class="btn-secondary">Volver</RouterLink>
 
-          <button
-              class="btn-primary"
-              type="submit"
-              :disabled="cargando || esAdmin"
-          >
+          <button class="btn-primary" type="submit" :disabled="cargando || esAdmin">
             {{
               esAdmin
-                  ? "Solo vista previa"
-                  : cargando
-                      ? "Enviando..."
-                      : "Enviar solicitud"
+                ? "Solo vista previa"
+                : cargando
+                  ? "Enviando..."
+                  : "Enviar solicitud"
             }}
           </button>
         </div>
@@ -211,7 +207,6 @@ const enviarSolicitud = async () => {
     </section>
   </main>
 </template>
-
 
 <style scoped>
 .adopt-page {

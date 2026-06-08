@@ -32,6 +32,7 @@ body {
 }
 
 .gato-card {
+    position: relative;
     border: none;
     border-radius: 20px;
     overflow: hidden;
@@ -108,7 +109,7 @@ body {
 .btn-acoger {
     background: #faf8b3 !important;
     border: none !important;
-    color: black !important;
+    color: #654236 !important;
     font-family: "coolvetica" !important;
     transition: .2s ease;
 }
@@ -264,4 +265,33 @@ body {
 
 .pagination .page-link {
     border-radius: 12px !important;
+}
+
+.guardar-gato-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .92);
+    color: #654236;
+    font-size: 23px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+    cursor: pointer;
+    transition: transform .2s ease, color .2s ease, background-color .2s ease;
+}
+
+.guardar-gato-btn:hover {
+    transform: scale(1.08);
+    color: #c84d5a;
+}
+
+.guardar-gato-btn.guardado {
+    color: #c84d5a;
+    background-color: #fff1f3;
 }

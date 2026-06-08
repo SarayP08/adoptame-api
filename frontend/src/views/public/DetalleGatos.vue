@@ -1,7 +1,11 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute, RouterLink } from "vue-router";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import { API_URL, buildCatImage } from "../../config/api.js";
+import { useAuthStore } from "../../stores/auth.js";
+
+const router = useRouter();
+const auth = useAuthStore();
 const route = useRoute();
 
 const gato = ref(null);
@@ -9,7 +13,23 @@ const cargando = ref(true);
 const error = ref("");
 
 const mostrarCastrado = (valor) => {
-  return valor === true || valor === 1 || valor === "1" || valor === "si" || valor === "sí" ? "Sí" : "No";
+  const estaCastrado =
+    valor === true ||
+    valor === 1 ||
+    valor === "1" ||
+    valor === "si" ||
+    valor === "sí";
+
+  return estaCastrado ? "Sí" : "No";
+};
+
+const solicitar = (tipo) => {
+  if (!auth.logueado) {
+    router.push(`/iniciarSesion?redirect=/adoptar/${gato.value.id}?tipo=${tipo}`);
+    return;
+  }
+
+  router.push(`/adoptar/${gato.value.id}?tipo=${tipo}`);
 };
 
 onMounted(async () => {
@@ -48,7 +68,12 @@ onMounted(async () => {
 
     <div v-else-if="gato" class="row align-items-start">
       <div class="col-lg-6 mb-4">
-        <img v-if="gato.imagen" :src="buildCatImage(gato.imagen)" :alt="`Imagen de ${gato.nombre}`" class="img-fluid rounded shadow detalle-imagen" />
+        <img
+          v-if="gato.imagen"
+          :src="buildCatImage(gato.imagen)"
+          :alt="`Imagen de ${gato.nombre}`"
+          class="img-fluid rounded shadow detalle-imagen"
+        />
       </div>
 
       <div class="col-lg-6">
@@ -65,13 +90,24 @@ onMounted(async () => {
               <li><strong>Edad:</strong> {{ gato.edad || "No indicada" }}</li>
               <li><strong>Sexo:</strong> {{ gato.sexo || "No indicado" }}</li>
               <li><strong>Castrado:</strong> {{ mostrarCastrado(gato.castrado) }}</li>
-              <li><strong>Vacunas:</strong> {{ JSON.parse(gato.vacunas).join(", ") || "No indicado" }}</li>
+              <li>
+                <strong>Vacunas:</strong>
+                {{ gato.vacunas?.length ? gato.vacunas.join(", ") : "No indicado" }}
+              </li>
             </ul>
 
             <div class="d-flex gap-2 mt-4">
-              <button class="btn btn-primary">Adoptar</button>
+              <button class="btn btn-primary" @click="solicitar('adopcion')">
+                Adoptar
+              </button>
 
-              <RouterLink to="/gatos" class="btn btn-outline-primary"> Volver </RouterLink>
+              <button class="btn btn-acoger" @click="solicitar('acogida')">
+                Acoger
+              </button>
+
+              <RouterLink to="/gatos" class="btn btn-outline-primary">
+                Volver
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -86,8 +122,15 @@ onMounted(async () => {
 }
 
 .titulo-detalle {
-  color: #654236;
+  color: #ffffff;
   font-family: "lemonMilk";
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  letter-spacing: 3px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.35),
+    0 8px 25px rgba(0, 0, 0, 0.2);
   margin-bottom: 1.5rem;
 }
 
@@ -121,7 +164,7 @@ onMounted(async () => {
 .btn-primary {
   background-color: #f09014;
   border: none;
-  font-family: "lemonMilk";
+  font-family: "coolvetica";
 }
 
 .btn-primary:hover {
@@ -131,7 +174,7 @@ onMounted(async () => {
 .btn-outline-primary {
   border-color: #f09014;
   color: #f09014;
-  font-family: "lemonMilk";
+  font-family: "coolvetica";
 }
 
 .btn-outline-primary:hover {
@@ -145,5 +188,16 @@ onMounted(async () => {
   border-radius: 8px;
   padding: 1rem;
   font-size: 14px;
+}
+
+.btn-acoger {
+  background-color: #8bbf6a;
+  border: none;
+  color: white;
+  font-family: "lemonMilk";
+}
+
+.btn-acoger:hover {
+  background-color: #6ea34f;
 }
 </style>

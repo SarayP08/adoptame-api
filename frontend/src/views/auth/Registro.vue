@@ -2,8 +2,10 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { API_URL } from "../../config/api.js";
+import { useAuthStore } from "../../stores/auth.js";
 
 const router = useRouter();
+const auth = useAuthStore();
 const nombre = ref("");
 const apellidos = ref("");
 const edad = ref("");
@@ -49,6 +51,15 @@ const handleSubmit = async () => {
     if (!data.success) {
       error.value = data.error || "No se pudo registrar";
 
+      return;
+    }
+
+    const resultadoLogin = await auth.login(email.value, password.value);
+
+    if (!resultadoLogin.ok) {
+      error.value =
+        resultadoLogin.message ||
+        "La cuenta se creó, pero no se pudo iniciar sesión automáticamente";
       return;
     }
 
@@ -152,7 +163,7 @@ const handleSubmit = async () => {
         <div class="form-check text-start my-3">
           <input class="form-check-input" type="checkbox" required />
           <label class="form-check-label">
-            <a href="/terminos" target="_blank">Acepto los términos y condiciones</a>
+          <a href="/terminosCondiciones" target="_blank">Acepto los términos y condiciones</a>
           </label>
         </div>
 
@@ -162,7 +173,7 @@ const handleSubmit = async () => {
 
         <br /><br />
 
-        <p class="text-body-secondary text-center">¿Ya tienes cuenta? <a href="/auth/Login">Inicia sesión</a></p>
+        <p class="text-body-secondary text-center">¿Ya tienes cuenta? <a href="/iniciarSesion">Inicia sesión</a></p>
 
         <p class="mt-5 mb-3 text-body-secondary text-center">&copy; Pawtita - 2026</p>
       </form>

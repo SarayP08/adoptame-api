@@ -19,7 +19,6 @@ export const useAuthStore = defineStore("auth", {
           headers: {
             "Content-Type": "application/json",
           },
-
           body: JSON.stringify({
             email,
             password,

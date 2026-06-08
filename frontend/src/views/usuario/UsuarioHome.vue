@@ -1,10 +1,18 @@
 <script setup>
+import { onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 
 import { useAuthStore } from "../../stores/auth.js";
-import { buildUserImage } from "../../config/api.js";
+import { API_URL, buildUserImage } from "../../config/api.js";
+import { obtenerGatosGuardados } from "../../services/gatosServices.js";
 
 const auth = useAuthStore();
+const cargandoResumen = ref(true);
+const resumen = ref({
+  guardados: 0,
+  mensajes: 0,
+  solicitudes: 0,
+});
 
 const fotoPerfil = () => {
   if (!auth.usuario?.foto) {
@@ -13,6 +21,32 @@ const fotoPerfil = () => {
 
   return buildUserImage(auth.usuario.foto);
 };
+
+onMounted(async () => {
+  try {
+    if (!auth.usuario?.id) {
+      await auth.comprobarSesion();
+    }
+
+    resumen.value.guardados = obtenerGatosGuardados(auth.usuario?.id).length;
+
+    const respuesta = await fetch(`${API_URL}/api/usuarios/resumenUsuario.php`, {
+      credentials: "include",
+    });
+    const datos = await respuesta.json();
+
+    if (!respuesta.ok || !datos.success) {
+      throw new Error(datos.error || "No se pudo cargar el resumen");
+    }
+
+    resumen.value.mensajes = datos.resumen.mensajes_no_leidos;
+    resumen.value.solicitudes = datos.resumen.solicitudes;
+  } catch (error) {
+    console.error("No se pudo cargar el resumen del usuario", error);
+  } finally {
+    cargandoResumen.value = false;
+  }
+});
 </script>
 
 <template>
@@ -43,7 +77,7 @@ const fotoPerfil = () => {
         <i class="bi bi-heart-fill"></i>
 
         <div>
-          <strong>4</strong>
+          <strong>{{ cargandoResumen ? "..." : resumen.guardados }}</strong>
           <p>Guardados</p>
         </div>
       </article>
@@ -52,8 +86,8 @@ const fotoPerfil = () => {
         <i class="bi bi-chat-dots-fill"></i>
 
         <div>
-          <strong>2</strong>
-          <p>Mensajes</p>
+          <strong>{{ cargandoResumen ? "..." : resumen.mensajes }}</strong>
+          <p>Mensajes sin leer</p>
         </div>
       </article>
 
@@ -61,7 +95,7 @@ const fotoPerfil = () => {
         <i class="bi bi-file-earmark-text-fill"></i>
 
         <div>
-          <strong>1</strong>
+          <strong>{{ cargandoResumen ? "..." : resumen.solicitudes }}</strong>
           <p>Solicitudes</p>
         </div>
       </article>
@@ -85,7 +119,7 @@ const fotoPerfil = () => {
 
         <p>Consulta las solicitudes de adopción que has realizado y sigue sus novedades.</p>
 
-        <RouterLink to="/guardados" class="card-btn"> Ver solicitudes </RouterLink>
+        <RouterLink to="/solicitudes" class="card-btn"> Ver solicitudes </RouterLink>
       </article>
 
       <!-- MENSAJES -->
